@@ -1,0 +1,163 @@
+\documentclass[a4paper, 14pt, titlepage]{extarticle}
+  \usepackage{cmap}
+  \usepackage[hidelinks,pdftex,unicode]{hyperref}
+  \usepackage{mathtext} % для кириллицы в формулах
+  \usepackage[T2A]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage[english,russian]{babel}
+  \usepackage{indentfirst}
+  \usepackage{cite}
+  \usepackage{amsmath} % для \eqref
+  \usepackage{amssymb} % для \leqslant
+  \usepackage{amsthm} % для \pushQED
+  \usepackage{color} % пока только для TODO:
+  \usepackage[pdftex]{graphicx}
+  \usepackage{subfig}
+  \usepackage{numprint}
+  \usepackage[left=30mm,right=15mm,top=20mm,bottom=20mm,bindingoffset=0cm]{geometry}
+  \usepackage{datetime}
+  \graphicspath{{../img/}{../../img/}}
+  \frenchspacing
+
+  \DeclareSymbolFont{T2Aletters}{T2A}{cmr}{m}{it} % кириллица в формулах курсивом
+
+  \addto\captionsrussian{
+    \renewcommand\contentsname{Содержание}
+    % перекрываю \refname, чтобы список литературы сам добавлял себя в оглавление
+    \let\oldrefname\refname
+    \renewcommand\refname{\addcontentsline{toc}{section}{\oldrefname}\oldrefname}
+  }
+
+  \newcommand{\underscore}[1]{\hbox to#1{\hrulefill}}
+  \newcommand{\todo}[1]{\textbf{\textcolor{red}{TODO: #1}}}
+  \newcommand{\note}[1]{\textit{Примечание: #1}}
+  \newcommand{\eng}[1]{{\English #1}}
+
+  % обёртка с моими настройками поверх figure:
+  % \begin{myfigure}{подпись}{fig:label} ... \end{myfigure}
+  \newenvironment{myfigure}[2]%
+    {\pushQED{\caption{#1} \label{#2}} % push caption & label
+     \begin{figure}[!htb]\centering } %
+    {  \popQED % pop caption & label
+     \end{figure}}
+
+  % вставка картинки: \figure[params]{подпись}{file}
+  % создаёт label вида fig:file
+  \newcommand{\includefigure}[3][]{
+    \begin{myfigure}{#2}{fig:#3}
+      \includegraphics[#1]{#3}
+    \end{myfigure}
+  }
+
+  % вставка subfigure внутри myfigure:
+  % \subfigure[params]{подпись}{file}
+  \newcommand{\subfigure}[3][]{
+    \subfloat[#2]{\label{fig:#3}\includegraphics[#1]{#3}}
+  }
+
+  \renewcommand{\le}{\leqslant} % <= с наклонной нижней перекладиной
+  \renewcommand{\ge}{\geqslant} % >= с наклонной нижней перекладиной
+
+  \linespread{1.3}
+
+  % русские буквы для списков и частей рисунка
+  \renewcommand{\theenumii}{(\asbuk{enumii})}
+  \renewcommand{\labelenumii}{\asbuk{enumii})}
+  \renewcommand{\thesubfigure}{\asbuk{subfigure}}
+
+  % TODO вернуть секции с новой страницы по необходимости
+  % \let\oldsection\section
+  % \renewcommand{\section}{\newpage\oldsection}
+
+  \setcounter{tocdepth}{3} % глубина оглавления
+
+  \hyphenation{англ} % убрать перенос в этом сокращении
+
+  % алиас и настройки для numprint
+  \newcommand{\num}[1]{\numprint{#1}}
+  \npthousandsep{\,}
+  \npthousandthpartsep{}
+  \npdecimalsign{,}
+
+  \newcommand{\checkdate}[3]{({\Russian дата обращения: \formatdate{#1}{#2}{#3}})}
+
+  \author{И.\,А.\,Новиков, кафедра физики и информационных систем КубГУ}
+  \title{Информационная система обработки экспериментальных данных}
+
+\begin{document}
+
+%----------------------- титульный лист ------------------------
+
+  \thispagestyle{empty}
+  \begin {center}
+  МИНИСТЕРСТВО ОБРАЗОВАНИЯ И НАУКИ РОССИЙСКОЙ ФЕДЕРАЦИИ\\
+  Федеральное государственное бюджетное образовательное учреждение\\
+  высшего профессионального образования\\
+  «КУБАНСКИЙ ГОСУДАРСТВЕННЫЙ УНИВЕРСИТЕТ»\\
+  (ФГБОУ ВПО «КубГУ»)
+
+  Физико-технический факультет
+
+  \vspace {1cm}
+
+  Кафедра физики и информационных систем
+
+  \vspace {3.5cm}
+
+  \textbf{КУРСОВАЯ РАБОТА}
+
+  \vspace {0.5cm}
+
+  \textbf{ИНФОРМАЦИОННАЯ СИСТЕМА ОБРАБОТКИ ЭКСПЕРИМЕНТАЛЬНЫХ ДАННЫХ}
+
+  \vspace {1.5cm}
+
+  \begin{flushleft}
+    Работу выполнил \underscore{5cm} (Новиков Иван Александрович)\\
+    Направление магистерской подготовки 011200.68 Физика
+
+    Руководитель магистерской программы <<Информационные процессы и системы>>\\
+    профессор, д-р физ.-мат. наук \underscore{5cm} (Н.\,М.\,Богатов)
+
+    Научный руководитель\\
+    доцент, канд. физ.-мат. наук \underscore{5cm} (Л.\,Р.\,Григорьян)
+
+    Нормоконтролер\\
+    должность, уч. степень \underscore{5cm} (И.\,О.\,Фамилия)
+  \end{flushleft}
+
+  \vspace {2cm}
+
+  Краснодар~--- 2012~год
+  \end {center}
+
+%------------------------- содержание -------------------------
+
+  \tableofcontents
+  % \newpage
+
+%-------------------------- введение --------------------------
+  \section{Введение}
+
+  В процессе производственной и познавательной деятельности возникает множество практических и
+  теоретических задач, для решения которых необходимо располагать количественной информацией о том
+  или ином свойстве объекта. Основным способом получения информации является процесс измерения.
+  Поэтому, задача повышения эффективности и достоверности процессов измерения и обработки информации
+  является актуальной.
+
+  \section{Многоканальные измерительные системы}
+
+  Существует достаточно широкий набор средств, которые позволяют создавать сложные системы
+  измерения, контроля и мониторинга физических процессов. Автоматизация эксперимента - комплекс
+  средств и методов для ускорения сбора и обработки экспериментальный данных, интенсификации
+  использования экспериментальных установок, повышения эффективности работы исследователей.
+  Характерной особенностью автоматизации эксперимента  является использование ЭВМ, что позволяет
+  собирать, хранить и обрабатывать большое количество информации, управлять экспериментом в процессе
+  его проведения, обслуживать одновременно несколько установок \cite{sokolov-auto-measure}.
+
+  \begin{flushleft}
+    \bibliographystyle{../../biblio/gost705}
+    \bibliography{../../biblio/my}
+  \end{flushleft}
+\end{document}
+
