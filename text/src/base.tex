@@ -84,8 +84,19 @@
 
   \newcommand{\checkdate}[3]{({\Russian дата обращения: \formatdate{#1}{#2}{#3}})}
 
-  \author{И.\,А.\,Новиков, кафедра физики и информационных систем КубГУ}
-  \title{Информационная система обработки экспериментальных данных}
+  \newcommand{\thetitle}{Информационная система обработки прецизионных сигналов}
+  \newcommand{\theauthor}{Иван Новиков}
+
+  \author{\theauthor, кафедра физики и информационных систем КубГУ}
+  \title{\thetitle}
+
+  \hypersetup{
+    pdfinfo={
+      Title = {\thetitle},
+      Author = {\theauthor},
+      Subject = {}
+    }
+  }
 
 \begin{document}
 
@@ -111,7 +122,7 @@
 
   \vspace {0.5cm}
 
-  \textbf{ИНФОРМАЦИОННАЯ СИСТЕМА ОБРАБОТКИ ЭКСПЕРИМЕНТАЛЬНЫХ ДАННЫХ}
+  \textbf{ \large \scshape \thetitle }
 
   \vspace {1.5cm}
 
