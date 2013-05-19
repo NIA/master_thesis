@@ -16,6 +16,8 @@
   \usepackage{numprint}
   \usepackage[left=30mm,right=15mm,top=20mm,bottom=20mm,bindingoffset=0cm]{geometry}
   \usepackage{datetime}
+  \usepackage{tikz}
+    \usetikzlibrary{positioning,fit}
   \graphicspath{{../img/}{../../img/}}
   \frenchspacing
 
@@ -233,7 +235,36 @@
   наиболее сложный узел, так как определяют метрологические характеристики всей системы. Типичная
   схема реализации измерительного канала приведена на рис.~\ref{fig:channel-scheme}.
 
-  \includefigure[width=1\linewidth]{функциональная схема канала измерения}{channel-scheme}
+  \begin{myfigure}{функциональная схема канала измерения}{fig:channel-scheme}
+    \begin{tikzpicture}[scale=0.9, transform shape]
+      \tikzstyle{block} = [rectangle, draw=blue, rectangle, rounded corners, fill=cyan!10,
+                           text centered, text width=3cm, font=\footnotesize, minimum height=4em]
+      \tikzstyle{around} = [rectangle, draw=darkgray, loosely dashed, rectangle, rounded corners]
+      % Блоки (c = channel)
+      \node        (c0) {};
+      \node[block] (c1) [right=0.5cm of c0] {Масштабный преобразователь};
+      \node[block] (c2) [right=0.7cm of c1] {Устройство фильтрации};
+      \node[block] (c3) [right=0.7cm of c2] {Аналогово-цифровой \mbox{преобразователь}}; % mbox чтобы избежать переноса
+      \node[block] (c4) [right=0.7cm of c3] {Устройство управления};
+      \node        (c5) [right=0.5cm of c4] {};
+
+      \node[above=of current bounding box.center] (title) {Измерительный канал};
+
+      % Стрелки под блоками
+      % TODO слить эти два цикла в один
+      \foreach \x in {1,...,3}
+        \node (u\x)[below=of c\x] {};
+      \foreach \x in {1,...,3}
+        \draw [->, thick] (u\x.north) -- (c\x);
+      % Нижняя объемлющая часть стрелки
+      \draw [-, thick] (c4) |- (u1.north);
+
+      \foreach \from/\to in {c0/c1, c1/c2, c2/c3, c3/c4, c4/c5}
+        \draw [->, thick] (\from) -- (\to);
+
+      \node[fit=(c0)(c3)(c5)(u1)(title),around]{}; %TODO Underfull hbox badness 10000 --- WHY?
+    \end{tikzpicture}
+  \end{myfigure}
 
   Данные с датчика физических величин поступают на масштабный преобразователь (например, усилитель),
   назначение которого связанно с преобразованием уровня аналогового сигнала до приемлемого значения.
