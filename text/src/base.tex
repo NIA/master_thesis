@@ -70,9 +70,9 @@
   \renewcommand{\labelenumii}{\asbuk{enumii})}
   \renewcommand{\thesubfigure}{\asbuk{subfigure}}
 
-  % TODO вернуть секции с новой страницы по необходимости
-  % \let\oldsection\section
-  % \renewcommand{\section}{\newpage\oldsection}
+  % разделы с новой страницы
+  \let\oldsection\section
+  \renewcommand{\section}{\newpage\oldsection}
 
   \setcounter{tocdepth}{3} % глубина оглавления
 
@@ -139,7 +139,7 @@
     доцент, канд. физ.-мат. наук \underscore{5cm} (Л.\,Р.\,Григорьян)
 
     Нормоконтролер\\
-    должность, уч. степень \underscore{5cm} (И.\,О.\,Фамилия)
+    доцент, канд. физ.-мат. наук \underscore{5cm} (Л.\,Р.\,Григорьян)
   \end{flushleft}
 
   \vspace {2cm}
