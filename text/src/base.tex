@@ -10,14 +10,15 @@
   \usepackage{amsmath} % для \eqref
   \usepackage{amssymb} % для \leqslant
   \usepackage{amsthm} % для \pushQED
-  \usepackage{color} % пока только для TODO:
+  \usepackage[usenames,dvipsnames]{xcolor}
   \usepackage[pdftex]{graphicx}
   \usepackage{subfig}
   \usepackage{numprint}
   \usepackage[left=30mm,right=15mm,top=20mm,bottom=20mm,bindingoffset=0cm]{geometry}
   \usepackage{datetime}
+  \usepackage{setspace} % для иных отступов в tikz-картинках
   \usepackage{tikz}
-    \usetikzlibrary{positioning,fit}
+    \usetikzlibrary{positioning,fit,shapes,calc}
   \graphicspath{{../img/}{../../img/}}
   \frenchspacing
 
@@ -233,7 +234,55 @@
   обратной связи, что позволяет напрямую управлять каждым из компонентов системы от ЭВМ
   (рис.~\ref{fig:system-structure}) \cite{kuzmichev-automation}.
 
-  \includefigure[width=1\linewidth]{структурная схема автоматизированной системы экспериментальных исследований}{system-structure}
+  \begin{myfigure}{структурная схема автоматизированной системы экспериментальных исследований}{fig:system-structure}
+    \begin{tikzpicture}[scale=0.9, transform shape]
+      \tikzstyle{arrow}  = [->, thick]
+      % item - общий стиль-предок для block, comp, control и user
+      \tikzstyle{item}   = [rectangle, rounded corners, text centered, font=\footnotesize]
+      \tikzstyle{block}  = [item, draw=blue, fill=cyan!10, text width=2.5cm, minimum height=4em]
+      \tikzstyle{comp}   = [item, draw=orange, fill=orange!20!yellow!20,
+                            text width=2cm, font=\small, minimum height=8em]
+      \tikzstyle{object} = [circle, draw=OliveGreen, fill=green!10,
+                            text centered, text width=2.2cm, font=\footnotesize]
+                            % minimum height должна совпадать с той, что у block
+      \tikzstyle{control}= [item, draw=teal, fill=teal!10,text width=4cm]
+      \tikzstyle{user}   = [item, draw=violet, fill=violet!10, inner sep=5mm]
+      % Блоки верхнего ряда (b = block)
+      \node[object] (b0) {Исследуемый\\объект};
+      \node[block]  (b1) [right=0.75cm of b0] {Датчики\\физических\\величин};
+      \node[block]  (b2) [right=0.75cm of b1] {Каналы\\измерений};
+      \node[block]  (b3) [right=0.75cm of b2] {Канал связи};
+      % Большой блок "ЭВМ" (comp = computer)
+      \node[comp] (Comp) [right=0.75cm of b3, shift={(0,-1)}] {ЭВМ};
+      % Узлы для стрелок под блоками
+      \foreach \x in {1,...,3} {
+        \node (u\x)[below=of b\x] {};
+      }
+      % Узел под b0 располагаем с осторожностью: b0 имеет другую высоту
+      \node (u0) at (u1-|b0) {};  % ( A -| B ) - точка с y-координатой от A и x-координатой от B
+      % Стрелки под блоками
+      \foreach \x in {0,...,3} {
+        \draw [arrow] (u\x.north) -- (b\x);
+      }
+      % Нижняя объемлющая часть стрелки
+      \draw [-, thick] (b0) -- (u0.north) -- (u0.north-|Comp.west) % ( A -| B ) - точка с y-координатой от A и x-координатой от B
+            node[midway, below, font=\footnotesize] (Label) {Канал обратной связи};
+      % Стрелки между блоками
+      \foreach \from/\to in {b0/b1, b1/b2, b2/b3}
+        \draw [arrow] (\from) -- (\to);
+      % Горизонтальная стрелка между последним блоком и ЭВМ
+      \draw [arrow] (b3) -- (b3-|Comp.west);
+
+      \node[control] (Control) [below=0.5cm of  Label ] {Пульт контроля\\и управления};
+      \node[user]    (User)    [below=0.75cm of Control] {Исследователь};
+
+      \draw [<->, very thick, blue!50!black] (Comp) |- (Control);
+      \draw [<->, ultra thick, brown!75!violet] (User) -- (Control);
+
+      \draw [<-, very thick, red] (b0.west) -- ++(-0.5cm, 0cm) |- (Control);
+
+    \end{tikzpicture}
+  \end{myfigure}
 
   При практической реализации автоматизированной системы каналы измерения представляют собой
   наиболее сложный узел, так как определяют метрологические характеристики всей системы. Типичная
@@ -257,10 +306,8 @@
       % Стрелки под блоками
       \foreach \x in {1,...,3} {
         \node (u\x)[below=of c\x] {};
-        \draw [->, thick] (u\x.north) -- (c\x);
+        \draw [->, thick] (c4) |- (u\x.north) -- (c\x);
       }
-      % Нижняя объемлющая часть стрелки
-      \draw [-, thick] (c4) |- (u1.north);
 
       \foreach \from/\to in {c0/c1, c1/c2, c2/c3, c3/c4, c4/c5}
         \draw [->, thick] (\from) -- (\to);
@@ -318,7 +365,75 @@
   Функциональная схема каналов измерения с применением микроконтроллера  представлена на
   рис.~\ref{fig:channel-with-microcontroller}.
 
-  \includefigure[width=1\linewidth]{функциональная схема канала измерения с применением микроконтроллера}{channel-with-microcontroller}
+  \begin{myfigure}{функциональная схема канала измерения с применением микроконтроллера}{fig:channel-with-microcontroller}
+    \begin{tikzpicture}[scale=0.85, transform shape]
+      \tikzstyle{arrow}  = [->, thick]
+      \tikzstyle{cline}  = [thick, Blue] % линия управления: толстый синий
+      \tikzstyle{sline}  = [thick, Red] % линия синхронизации толстый синий
+      \tikzstyle{item}   = [rectangle, rounded corners, text centered, font=\footnotesize]
+      \tikzstyle{block}  = [item, draw=blue, fill=cyan!10, text width=3cm, minimum height=4em]
+      \tikzstyle{around} = [item, draw=darkgray, loosely dashed]
+      \tikzstyle{title}  = [above, font=\small]
+      \tikzstyle{controller} = [item, draw=Blue, thick, fill=blue!10, text width=3cm, minimum height=2.5cm]
+      \tikzstyle{syncdev}= [item, draw=OliveGreen, fill=green!10, text width=2.5cm]
+      \tikzstyle{ram}    = [cylinder, aspect=0.25, inner sep=3mm, shape border rotate=90, draw=Emerald, fill=Emerald!10, text centered, font=\footnotesize]
+      \tikzstyle{empty}  = [fill=none, draw=none, inner sep=0mm]
+
+      % Блоки (c = channel, cIJ - канал номер I, блок номер J)
+      % Задаём вручную начальные позиции каналов
+      \node[empty] (c10) {};
+      \node[empty] (c20) [below=3.5cm of c10] {};
+      \node[empty] (cN0) [below=3.5cm of c20] {};
+      % Всё остальное рисуем в цикле:
+      \foreach \x in {1, 2, N} {
+        \node[block] (c\x1) [right=0.5cm of c\x0] {Масштабный преобразователь};
+        \node[block] (c\x2) [right=0.7cm of c\x1] {Устройство фильтрации};
+        \node[block] (c\x3) [right=0.7cm of c\x2] {Аналогово-цифровой \mbox{преобразователь}}; % mbox чтобы избежать переноса
+        \node[title] (title\x) at (c\x2.north) {Измерительный канал №$\x$};
+        \foreach \from/\to in {c\x0/c\x1, c\x1/c\x2, c\x2/c\x3}
+          \draw [arrow] (\from) -- (\to);
+        % Узлы под боками (u = under, uIJ)
+        \foreach \y in {1,2} {
+          \node[empty] (u\x\y)[below=3mm of c\x\y] {};
+        }
+        % u3 отдельно: он ниже
+        \node[empty] (u\x3)[below=6mm of c\x3] {};
+        \node[fit=(c\x1)(c\x3)(u\x1)(title\x),around]{\hspace*{\fill}~}; % hspace - хак, чтобы подавить underfull hbox
+      }
+      \node[controller] (MCU) [right=2.5cm of c23] {Микроконтроллер};
+      % Входы в контроллер: mc1, mc2, mcN
+      \foreach \x/\angle in {1/160, 2/180, N/200} {
+        \node (mc\x) [left=1cm of MCU.\angle] {};
+        \draw [arrow] (c\x3) -| (mc\x.center) -- (mc\x.center -| MCU.west);
+      }
+      % Линия управления
+      \node[circle,fill=Blue,inner sep=1mm] (Control) [right=4mm of u11-|mc1] {};
+      \node[above right, Blue, font=\footnotesize] at (Control) {Линия управления};
+      \draw [-, cline] (MCU) |- (Control);
+      % Линия синхронизации
+      \node[circle,fill=Red,inner sep=1mm] (Sync) [left=4mm of u23-|mc2] {};
+      \node[below right, Red, font=\footnotesize] at (Sync-|Control) {Линия синхронизации};
+      \draw [-, sline] (MCU) |- (Sync);
+      % Соединяем линии синхронизации и управления с блоками
+      \foreach \x in {1,2,N} {
+        % Стрелки линии управления
+        \foreach \y in {1,2} {
+          \draw [->, cline] (Control) |- (u\x\y.center) -- (c\x\y);
+        }
+        % Стрелки линии синхронизации
+        \draw [->, sline] (Sync) |- (u\x3.center) -- (c\x3);
+      }
+      % Устройство синхронизации
+      \node[syncdev] (SyncDev) [below=2cm of MCU] {Устройство синхронизации};
+      \draw[<-, thick, OliveGreen] (MCU.340) -- ++(4mm,0mm) |- (SyncDev);
+      % ОЗУ
+      \node[ram] (RAM) [above=2.2cm of MCU] {ОЗУ};
+      \draw[<->, thick, Emerald] (MCU.20) -- ++(4mm, 0mm) |- (RAM);
+      % Выход
+      \draw[arrow] (MCU.east) -- ++(1, 0);
+
+    \end{tikzpicture}
+  \end{myfigure}
 
   Данные от датчиков физических величин поступают на масштабные преобразователи измерительных
   каналов. Использование при этом микроконтроллера с обратной связью позволяет организовывать
