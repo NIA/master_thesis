@@ -14,7 +14,7 @@
   \usepackage[pdftex]{graphicx}
   \usepackage{subfig}
   \usepackage{numprint}
-  \usepackage[left=30mm,right=15mm,top=20mm,bottom=20mm,bindingoffset=0cm]{geometry}
+  \usepackage[left=20mm,right=20mm,top=20mm,bottom=25mm,bindingoffset=0cm]{geometry}
   \usepackage{datetime}
   \usepackage{setspace} % для иных отступов в tikz-картинках
   \usepackage{tikz}
@@ -89,33 +89,31 @@
 
   \newcommand{\checkdate}[3]{({\Russian дата обращения: \formatdate{#1}{#2}{#3}})}
 
-  \newcommand{\thetitle}{Информационная система обработки прецизионных сигналов}
-  \newcommand{\theauthor}{Иван Новиков}
+  \newcommand{\thetitle}{ИНФОРМАЦИОННАЯ СИСТЕМА ОБРАБОТКИ ПРЕЦИЗИОННЫХ СИГНАЛОВ}
+  \newcommand{\theauthor}{Новиков И.А.}
+  \newcommand{\theinstitute}{ФГБОУ ВПО «Кубанский государственный университет»}
 
-  \author{\theauthor, КубГУ}
+  \author{\theauthor, \theinstitute}
   \title{\thetitle}
 
   \hypersetup{
     pdfinfo={
       Title = {\thetitle},
-      Author = {\theauthor},
+      Author = {\theauthor, КубГУ},
       Subject = {}
     }
   }
 
 \begin{document}
 
-%----------------------- титульный лист ------------------------
+  \begin{center}
+    \textbf{\thetitle}
 
-  \maketitle
+    \theauthor
 
-%------------------------- содержание -------------------------
+    \theinstitute, г. Краснодар
+  \end{center}
 
-  \microtypesetup{protrusion=false} % отключить protrusion для содержания
-    \tableofcontents
-  \microtypesetup{protrusion=true}
-
-%-------------------------- введение --------------------------
   \sectiontoc{Введение}\label{sec:intro}
 
   В процессе производственной и познавательной деятельности возникает множество практических и
