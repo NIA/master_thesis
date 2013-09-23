@@ -1,0 +1,62 @@
+\documentclass[a4paper, 14pt]{extarticle}
+  \usepackage{cmap}
+  \usepackage[hidelinks,unicode]{hyperref}
+  \usepackage{mathtext} % для кириллицы в формулах
+  \usepackage[T2A]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage[english,russian]{babel}
+  \usepackage{cite}
+  \usepackage{numprint}
+  \usepackage[left=20mm,right=20mm,top=20mm,bottom=25mm,bindingoffset=0cm]{geometry}
+  \usepackage{datetime}
+  \usepackage[babel,protrusion=true,expansion]{microtype}
+  \frenchspacing
+
+  \DeclareSymbolFont{T2Aletters}{T2A}{cmr}{m}{it} % кириллица в формулах курсивом
+
+  \renewcommand{\le}{\leqslant} % <= с наклонной нижней перекладиной
+  \renewcommand{\ge}{\geqslant} % >= с наклонной нижней перекладиной
+
+  \linespread{1.3}
+
+  \hyphenation{англ} % убрать перенос в этом сокращении
+
+  % алиас и настройки для numprint
+  \newcommand{\num}[1]{\numprint{#1}}
+  \npthousandsep{\,}
+  \npthousandthpartsep{}
+  \npdecimalsign{,}
+
+  \newcommand{\checkdate}[3]{({\Russian дата обращения: \formatdate{#1}{#2}{#3}})}
+
+  \newcommand{\thetitle}{Список публикаций}
+  \newcommand{\theauthor}{Новиков И.А.}
+  \newcommand{\theinstitute}{Кубанский государственный университет}
+
+  \addto\captionsrussian{
+    % Не нужен заголовок "Список литературы"
+    \renewcommand\refname{\thetitle}
+  }
+
+  \author{\theauthor, \theinstitute}
+  \title{\thetitle}
+
+  \hypersetup{
+    pdfinfo={
+      Title = {\thetitle},
+      Author = {\theauthor, КубГУ},
+      Subject = {}
+    }
+  }
+
+\begin{document}
+
+  \subsection*{\theauthor, \theinstitute}
+
+  \nocite{*}
+
+  \begin{flushleft}
+    \bibliographystyle{../../biblio/ugost2003} % Или использовать ugost2008 для нового ГОСТа
+    \bibliography{../../biblio/own}
+  \end{flushleft}
+\end{document}
