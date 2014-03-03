@@ -2,5 +2,5 @@
 set filename=%cd%\src\base.tex
 echo Building %filename%...
 title rubbr - %filename%
-call rubbr -cvFe pdflatex
+call rubbr -vFe pdflatex
 pause
