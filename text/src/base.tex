@@ -325,6 +325,27 @@
   \term{Масштабирование}~--- это создание выходного сигнала, однородного с входным и
   пропорционального ему по размеру информативного параметра. Масштабное преобразование реализуется
   в устройстве, которое называется масштабным преобразователем \cite[с.~16]{volkov-iis}.
+  В упрощённом виде алгоритм процесса измерения представлен на рис.~\ref{fig:meas-algo}.
+
+  \begin{myfigure}{структурная схема алгоритма измерения}{fig:meas-algo}
+    \begin{tikzpicture}[scale=1.0, transform shape]
+      \tikzstyle{arrow}  = [->, thick]
+      \tikzstyle{onarrow} = [pos=0.5, font=\footnotesize]
+      \tikzstyle{item}  = [text centered, font=\footnotesize]
+      \tikzstyle{block} = [item, rectangle, draw=blue, rounded corners, fill=cyan!10, text width=3cm]
+      \tikzstyle{cond}  = [item, diamond, aspect=1.5, draw=Orange, fill=orange!20, text width=2cm]
+
+      \node[block] (meas) {Измерение};
+      \node[cond]  (check) [below=of meas]  {Сравнение с мерой};
+      \node[block] (res)   [below=of check] {Отображение информации};
+      \node[block] (corr)  [right= of check]  {Корректировка алгоритма измерения};
+
+      \draw[arrow] (meas)  -- (check);
+      \draw[arrow] (check) -- (res)  node[onarrow,left] {Да};
+      \draw[arrow] (check) -- (corr) node[onarrow,below]{Нет};
+      \draw[arrow] (corr)  |- (meas);
+    \end{tikzpicture}
+  \end{myfigure}
 
   Рассмотрим также некоторые термины, связанные непосредственно с измерительными информационными
   системами.
@@ -437,12 +458,37 @@
   измерительной информационной системы \cite[с.~397]{rannev-meas-tech}:
   \begin{itemize}
     \item получение измерительной информации от объекта исследования;
-    \item сохранение информации;
     \item обработка информации;
+    \item сохранение информации;
     \item представление информации оператору;
     \item дальнейшая передача информации;
     \item формирование управляющих воздействий.
   \end{itemize}
+  В графическом виде эти основные функции представлены на рис.~\ref{fig:iis-functions}.
+
+  \begin{myfigure}{основные функции ИИС, наиболее фундаментальные выделены}{fig:iis-functions}
+    \begin{tikzpicture}[scale=0.9, transform shape]
+      \tikzstyle{arrow}  = [->, thick]
+      \tikzstyle{block} = [rectangle, rounded corners, draw=blue, fill=cyan!10, minimum height=2em,
+                           text width=3cm, text centered, font=\small]
+      \tikzstyle{main}  = [fill=cyan!20, font=\small\bfseries]
+      \node[block,main] (rcv)  {Получение};
+      \node[block,main] (proc) [right=1cm of rcv]  {Обработка};
+      \node[block,main] (save) [below=5mm of proc] {Сохранение};
+      \node[block]      (tran) [right=1cm of proc] {Передача};
+      \node[block]      (disp) [above=5mm of tran] {Отображение};
+      \node[block]      (ctrl) [above=5mm of rcv]  {Управление};
+
+      \draw[arrow] (rcv) -- (proc);
+      \foreach \to in {save, tran}
+        \draw[arrow] (proc) -- (\to);
+      \foreach \from/\to in {proc.140/ctrl, proc.40/disp}
+        \draw[arrow] (\from) |- (\to);
+      \draw[arrow, <-] (rcv.west)  -- ++(-5mm, 0);
+      \draw[arrow]     (ctrl.west) -- ++(-5mm, 0);
+      \draw[arrow]     (tran.east) -- ++(5mm, 0);
+    \end{tikzpicture}
+  \end{myfigure}
 
   В зависимости от требований конкретной задачи, стоящей перед ИИС, этот краткий список функций
   может изменяться и пополняться. При этом первые три являются наиболее фундаментальными и
