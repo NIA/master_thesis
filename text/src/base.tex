@@ -18,7 +18,7 @@
   \usepackage{datetime}
   \usepackage{setspace} % для иных отступов в tikz-картинках
   \usepackage{tikz}
-    \usetikzlibrary{positioning,fit,shapes,calc}
+    \usetikzlibrary{positioning,fit,shapes,calc,backgrounds}
   \usepackage[babel,protrusion=true,expansion]{microtype}
   \usepackage{nameref}
   \graphicspath{{../img/}{../../img/}}
@@ -358,19 +358,15 @@
       \tikzstyle{biarrow}  = [<->, very thick]
       % block - общий стиль-предок для inblk и outblk
       \tikzstyle{block}  = [rectangle, rounded corners, text centered, font=\footnotesize,
-                              text width=3cm, minimum height=1.4cm]
-      \tikzstyle{inblk}  = [block, draw=blue, fill=cyan!10]
+                              text width=3cm]
+      \tikzstyle{inblk}  = [block, draw=blue, fill=cyan!10, minimum height=1.4cm]
       \tikzstyle{outblk} = [block, draw=OliveGreen, fill=green!10]
-      \tikzstyle{bigarrow}=[draw=Gray, thick]
+      \tikzstyle{bigarrow}=[draw=Gray, fill=Gray!10, thick]
+      \tikzstyle{around} = [rectangle, rounded corners, draw=darkgray, loosely dashed]
 
       \node[inblk] (in) {Входная\\информация};
       \node[inblk] (inf) [right=3mm of in]{Информационное\\обеспечение};
       \node[inblk] (out) [right=3mm of inf]{Выходная информация};
-
-      \draw[bigarrow] ($(in.north west) + (-3mm,3mm)$) -- ($(in.south west) + (-3mm,-3mm)$) --
-                      ($(out.south east) + (-3mm,-3mm)$) -- ++(0, -0.5cm) --
-                      ($(out.east) + (2cm, 0)$) -- ($(out.north east) + (-3mm,0.8cm)$) --
-                      ++(0cm, -0.5cm) -- cycle;
 
       \node[outblk] (tech) [below=1.7cm of inf.west] {Техническое\\обеспечение};
       \node[outblk] (soft) [right=1cm of tech] {Программное\\обеспечение};
@@ -381,7 +377,16 @@
       \draw[arrow] (soft) -- (tech);
       \draw[biarrow] ($(inf.west)+(0,-1cm)$) -- (tech);
       \draw[biarrow] ($(out.west)+(0, 1cm)$) -- (pers);
-      % TODO прямые стрелки + окружающий прямоугольник с текстом "Метрологическое обеспечение"
+
+      \begin{pgfonlayer}{background}
+        \node[fit=(org)(pers)(tech)(soft),around,label={[font=\small]below:Метрологическое обеспечение}] (title) {\hspace*{\fill}~}; % hspace - хак, чтобы подавить underfull hbox
+
+        \draw[bigarrow] ($(in.north west) + (-3mm,3mm)$) -- ($(in.south west) + (-3mm,-3mm)$) --
+                        ($(out.south east) + (-3mm,-3mm)$) -- ++(0, -0.5cm) --
+                        ($(out.east) + (2cm, 0)$) -- ($(out.north east) + (-3mm,0.8cm)$) --
+                        ++(0cm, -0.5cm) -- cycle;
+      \end{pgfonlayer}
+
     \end{tikzpicture}
   \end{myfigure}
 
