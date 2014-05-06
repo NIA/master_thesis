@@ -19,6 +19,14 @@
   \usepackage{setspace} % для иных отступов в tikz-картинках
   \usepackage{tikz}
     \usetikzlibrary{positioning,fit,shapes,calc,backgrounds}
+    % Цветовая тема:
+    \tikzstyle{theme1}  = [draw=violet,  fill=violet!15]
+      \tikzstyle{theme1a} = [draw=violet!70!Blue, fill=violet!20]
+    \tikzstyle{theme2}  = [draw=cyan!80!Blue, fill=cyan!15]
+    \tikzstyle{theme3}  = [draw=Emerald,    fill=green!15]
+    \tikzstyle{theme4}  = [draw=Orange,     fill=orange!20]
+    \tikzstyle{theme5}  = [draw=OliveGreen, fill=green!15]
+    \tikzstyle{theme0}  = [draw=Gray,       fill=Gray!10]
   \usepackage[babel,protrusion=true,expansion]{microtype}
   \usepackage{nameref}
   \usepackage[labelsep=endash]{caption} % тире в подписях рисунков, таблиц
@@ -350,8 +358,8 @@
       \tikzstyle{arrow}  = [->, thick]
       \tikzstyle{onarrow} = [pos=0.5, font=\footnotesize]
       \tikzstyle{item}  = [text centered, font=\footnotesize]
-      \tikzstyle{block} = [item, rectangle, draw=blue, rounded corners, fill=cyan!10, text width=3cm]
-      \tikzstyle{cond}  = [item, diamond, aspect=1.5, draw=Orange, fill=orange!20, text width=2cm]
+      \tikzstyle{block} = [item, theme1, rectangle, rounded corners, text width=3cm]
+      \tikzstyle{cond}  = [item, theme2, diamond, aspect=1.5, text width=2cm]
 
       \node[block] (meas) {Измерение};
       \node[cond]  (check) [below=of meas]  {Сравнение с мерой};
@@ -397,9 +405,9 @@
       % block - общий стиль-предок для inblk и outblk
       \tikzstyle{block}  = [rectangle, rounded corners, text centered, font=\footnotesize,
                               text width=3cm]
-      \tikzstyle{inblk}  = [block, draw=blue, fill=cyan!10, minimum height=1.4cm]
-      \tikzstyle{outblk} = [block, draw=OliveGreen, fill=green!10]
-      \tikzstyle{bigarrow}=[draw=Gray, fill=Gray!10, thick]
+      \tikzstyle{inblk}  = [block, theme1, minimum height=1.4cm]
+      \tikzstyle{outblk} = [block, theme2]
+      \tikzstyle{bigarrow}=[thick, theme0]
       \tikzstyle{around} = [rectangle, rounded corners, draw=darkgray, loosely dashed]
 
       \node[inblk] (in) {Входная\\информация};
@@ -491,9 +499,9 @@
   \begin{myfigure}{основные функции ИИС, наиболее фундаментальные выделены}{fig:iis-functions}
     \begin{tikzpicture}[scale=0.9, transform shape]
       \tikzstyle{arrow}  = [->, thick]
-      \tikzstyle{block} = [rectangle, rounded corners, draw=blue, fill=cyan!10, minimum height=2em,
+      \tikzstyle{block} = [rectangle, theme1, rounded corners, minimum height=2em,
                            text width=3cm, text centered, font=\small]
-      \tikzstyle{main}  = [fill=cyan!20, font=\small\bfseries]
+      \tikzstyle{main}  = [theme1a, font=\small\bfseries]
       \node[block,main] (rcv)  {Получение};
       \node[block,main] (proc) [right=1cm of rcv]  {Обработка};
       \node[block,main] (save) [below=5mm of proc] {Сохранение};
@@ -655,14 +663,12 @@
       \tikzstyle{arrow}  = [->, thick]
       % item - общий стиль-предок для block, comp, control и user
       \tikzstyle{item}   = [rectangle, rounded corners, text centered, font=\footnotesize]
-      \tikzstyle{block}  = [item, draw=blue, fill=cyan!10, text width=2.5cm, minimum height=4em]
-      \tikzstyle{comp}   = [item, draw=orange, fill=orange!20!yellow!20,
-                            text width=2cm, font=\small, minimum height=8em]
-      \tikzstyle{object} = [circle, draw=OliveGreen, fill=green!10,
-                            text centered, text width=2.2cm, font=\footnotesize]
+      \tikzstyle{block}  = [item, theme1, text width=2.5cm, minimum height=4em]
+      \tikzstyle{comp}   = [item, theme2, text width=2cm, font=\small, minimum height=8em]
+      \tikzstyle{object} = [circle, theme3, text centered, text width=2.2cm, font=\footnotesize]
                             % minimum height должна совпадать с той, что у block
-      \tikzstyle{control}= [item, draw=teal, fill=teal!10,text width=4cm]
-      \tikzstyle{user}   = [item, draw=violet, fill=violet!10, inner sep=5mm]
+      \tikzstyle{control}= [item, theme2, text width=4cm]
+      \tikzstyle{user}   = [item, theme3, inner sep=5mm]
       % Блоки верхнего ряда (b = block)
       \node[object] (b0) {Исследуемый\\объект};
       \node[block]  (b1) [right=0.75cm of b0] {Датчики\\физических\\величин};
@@ -718,7 +724,7 @@
 
   \begin{myfigure}{функциональная схема канала измерения}{fig:channel-scheme}
     \begin{tikzpicture}[scale=0.9, transform shape]
-      \tikzstyle{block} = [rectangle, draw=blue, rectangle, rounded corners, fill=cyan!10,
+      \tikzstyle{block} = [rectangle, theme1, rectangle, rounded corners,
                            text centered, text width=3cm, font=\footnotesize, minimum height=4em]
       \tikzstyle{around} = [rectangle, draw=darkgray, loosely dashed, rectangle, rounded corners]
       % Блоки (c = channel)
@@ -887,12 +893,12 @@
       \tikzstyle{cline}  = [thick, Blue] % линия управления: толстый синий
       \tikzstyle{sline}  = [thick, Red] % линия синхронизации толстый синий
       \tikzstyle{item}   = [rectangle, rounded corners, text centered, font=\footnotesize]
-      \tikzstyle{block}  = [item, draw=blue, fill=cyan!10, text width=3cm, minimum height=4em]
+      \tikzstyle{block}  = [item, theme1, text width=3cm, minimum height=4em]
       \tikzstyle{around} = [item, draw=darkgray, loosely dashed]
       \tikzstyle{title}  = [above, font=\small]
-      \tikzstyle{controller} = [item, draw=Blue, thick, fill=blue!10, text width=3cm, minimum height=2.5cm]
-      \tikzstyle{syncdev}= [item, draw=OliveGreen, fill=green!10, text width=2.5cm]
-      \tikzstyle{ram}    = [cylinder, aspect=0.25, inner sep=3mm, shape border rotate=90, draw=Emerald, fill=Emerald!10, text centered, font=\footnotesize]
+      \tikzstyle{controller} = [item, theme2, thick, text width=3cm, minimum height=2.5cm]
+      \tikzstyle{syncdev}= [item, theme3, text width=2.5cm]
+      \tikzstyle{ram}    = [cylinder, theme3, aspect=0.25, inner sep=3mm, shape border rotate=90, text centered, font=\footnotesize]
       \tikzstyle{empty}  = [fill=none, draw=none, inner sep=0mm]
 
       % Блоки (c = channel, cIJ - канал номер I, блок номер J)
@@ -941,10 +947,10 @@
       }
       % Устройство синхронизации
       \node[syncdev] (SyncDev) [below=2cm of MCU] {Устройство синхронизации};
-      \draw[<-, thick, OliveGreen] (MCU.340) -- ++(4mm,0mm) |- (SyncDev);
+      \draw[<-, thick, theme3, fill=none] (MCU.340) -- ++(4mm,0mm) |- (SyncDev);
       % ОЗУ
       \node[ram] (RAM) [above=2.2cm of MCU] {ОЗУ};
-      \draw[<->, thick, Emerald] (MCU.20) -- ++(4mm, 0mm) |- (RAM);
+      \draw[<->, thick, theme3, fill=none] (MCU.20) -- ++(4mm, 0mm) |- (RAM);
       % Выход
       \draw[arrow] (MCU.east) -- ++(1, 0);
 
@@ -1122,6 +1128,13 @@
 
   \todo{написать раздел.}
 
+  % Какие общие принципы стоит описать?
+  % - организация в виде исполняемых файлов / библиотек
+  % - принципы модульности, переиспользования
+  % - что-то ещё из серии ООАД (?)
+  % - как правильно оптимизировать приложения
+  % - принципы параллельного программирования
+
   % Про какие компоненты можно рассказать?
   % - коммуникации
   % - обработка
@@ -1182,9 +1195,8 @@
   получение данных по протоколу RS-232\cite{sweet-serial} от микроконтроллера, выполняющего оцифровку.
 
   Необходимо, чтобы быстродействие системы было достаточным для обработки поступающих цифровых
-  сигналов в реальном времени. В частности, система должна обрабатывать в секунду не менее 1000 % TODO цифра посерьёзнее
-  отсчётов, поступающих на вход.
-  % FIXME разрядность данных - немаловажный параметр (???)
+  сигналов в реальном времени. В частности, система должна обрабатывать в секунду не менее
+  \numprint{10000} отсчётов, представленных 32-битными числами, поступающих на вход.
 
   Для обеспечения точности привязки по времени система должна осуществлять синхронизацию времени с
   использованием системы GPS, что было объяснено выше, в подразделе~\ref{ssec:sync}.
@@ -1230,7 +1242,7 @@
   разработке. В соответствии с выбором объектно-ориентированного языка программирования, архитектура описана в
   терминах объектно-ориентированного проектирования (англ. \eng{Object-Oriented Analysis and Design,
   OOAD}) \cite{booch-ooad}.
-  % FIXME можно рисунок среды (???)
+  % FIXME можно разные диаграммы
 
   \subsection{Архитектура системы}
 
@@ -1278,11 +1290,11 @@
       % box - общий стиль-предок для прямоугольных блоков
       \tikzstyle{box}    = [item, text width=1cm]
       % model, view, ctrl - три уровня MVC
-      \tikzstyle{model}  = [draw=Violet, fill=Violet!10]
+      \tikzstyle{model}  = [theme1]
         \tikzstyle{mblk} = [model, block]
         \tikzstyle{mbox} = [model, box]
-      \tikzstyle{view}   = [block, draw=Emerald, fill=Emerald!10]
-      \tikzstyle{ctrl}   = [block, draw=cyan, fill=cyan!10]
+      \tikzstyle{view}   = [block, theme2]
+      \tikzstyle{ctrl}   = [block, theme3]
       % блоки
       \node[mblk] (Proto) {Абстрактный\\протокол};
       \node[mbox] (COM)   [below=of Proto.south west, anchor=west] {COM\\порт};
@@ -1333,9 +1345,9 @@
       % block - общий стиль-предок для округлых блоков
       \tikzstyle{block}  = [item, rounded corners, thick, text width=3cm]
       % model, view, ctrl - три уровня MVC
-      \tikzstyle{modl}  = [block, draw=Violet, fill=Violet!10]
-      \tikzstyle{view}   = [block, draw=Emerald, fill=Emerald!10]
-      \tikzstyle{ctrl}   = [block, draw=cyan, fill=cyan!10]
+      \tikzstyle{modl}   = [block, theme1]
+      \tikzstyle{view}   = [block, theme2]
+      \tikzstyle{ctrl}   = [block, theme3]
       % блоки
       \node[modl] (Stat)  {Статистика};
       \node[modl] (Readr) [below=0.75cm of Stat] {Чтение\\файла};
