@@ -285,7 +285,7 @@
     \stepcounter{tikzumlPackageSubPackageNum}%
   \fi%
   %
-  \node[draw=\tikzumlpackagedraw, fill=\tikzumlpackagefill, text=\tikzumlpackagetext, font=\tikzumlfont, inner sep=1.5ex, /tikzuml/package/style, fit = \csname tikzumlPackageFit\tikzumlPackage@parent @@\tikzumlPackage@fitname\endcsname] (\tikzumlPackage@nodeName) {};%
+  \node[draw=\tikzumlpackagedraw, fill=\tikzumlpackagefill, text=\tikzumlpackagetext, font=\tikzumlfont, inner sep=1.5ex, /tikzuml/package/style, fit = \csname tikzumlPackageFit\tikzumlPackage@parent @@\tikzumlPackage@fitname\endcsname] (\tikzumlPackage@nodeName) {\hspace*{\fill}~}; % NIA: hack to avoid underfull warning
   \node[draw=\tikzumlpackagedraw, fill=\tikzumlpackagefill, text=\tikzumlpackagetext, font=\tikzumlfont, minimum height=1.5em, outer ysep=-0.3, anchor=south west] (\tikzumlPackage@nodeName-caption) at (\tikzumlPackage@nodeName.north west) {\tikzumlPackage@name};%
   \end{pgfonlayer}%
   \end{scope}%
