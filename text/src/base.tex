@@ -18,7 +18,7 @@
   \usepackage{datetime}
   \usepackage{setspace} % для иных отступов в tikz-картинках
   \usepackage{tikz}
-    \usepackage{../../tikz-uml} % TODO fix warning
+    \usepackage{tikz-uml}
     \usetikzlibrary{positioning,fit,shapes,calc,backgrounds}
     % Цветовая тема:
     \tikzstyle{theme1}  = [draw=violet,  fill=violet!15]
@@ -1478,7 +1478,12 @@
   при асинхронных операциях подробная информация об ошибке и о том, где она произошла, записывается в
   лог (журнал) для упрощения поиска и исправления ошибок.
 
+% HACK: Разрешаем строке растянуться сильнее конкретно в этом заголовке (иначе будет overfull hbox)
+\begingroup
+\tolerance 2000
+\hbadness 2000
   \section{Универсальная информационная система обработки экспериментальных данных}\label{sec:my-system}
+\endgroup
 
   \subsection{Требования к разрабатываемой системе}\label{ssec:requirements}
 
