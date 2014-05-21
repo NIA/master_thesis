@@ -372,7 +372,7 @@
   в~устройстве, которое называется масштабным преобразователем \cite[с.~16]{volkov-iis}.
   В~упрощённом виде алгоритм процесса измерения представлен на рис.~\ref{fig:meas-algo}.
 
-  \begin{myfigure}{структурная схема алгоритма измерения}{fig:meas-algo}
+  \begin{myfigure}{Структурная схема алгоритма измерения}{fig:meas-algo}
     \begin{tikzpicture}[scale=1.0, transform shape]
       \tikzstyle{arrow}  = [->, thick]
       \tikzstyle{onarrow} = [pos=0.5, font=\footnotesize]
@@ -417,7 +417,7 @@
   системы, заданное функционирование комплекса технических средств ИИС и контроль за процессом измерения.
   Схема взаимодействие этих составляющих ИИС представлена на рис.~\ref{fig:iis-components}.
 
-  \begin{myfigure}{схема взаимодействия основных компонентов измерительных информационных систем}{fig:iis-components}
+  \begin{myfigure}{Схема взаимодействия основных компонентов измерительных информационных систем}{fig:iis-components}
     \begin{tikzpicture}[scale=1.0, transform shape]
       \tikzstyle{arrow}  = [->, thick]
       \tikzstyle{biarrow}  = [<->, very thick]
@@ -515,7 +515,7 @@
   \end{itemize}
   В графическом виде эти основные функции представлены на рис.~\ref{fig:iis-functions}.
 
-  \begin{myfigure}{основные функции ИИС, наиболее фундаментальные выделены}{fig:iis-functions}
+  \begin{myfigure}{Основные функции ИИС, наиболее фундаментальные выделены}{fig:iis-functions}
     \begin{tikzpicture}[scale=0.9, transform shape]
       \tikzstyle{arrow}  = [->, thick]
       \tikzstyle{block} = [rectangle, theme1, rounded corners, minimum height=2em,
@@ -671,7 +671,7 @@
   Перечисленные в подразделе~\ref{ssec:iis-requirements} принципы позволяют сформировать наиболее
   общую структуру автоматизированной системы управления экспериментом (рис.~\ref{fig:system-structure}).
 
-  \begin{myfigure}{структурная схема автоматизированной системы измерений}{fig:system-structure}
+  \begin{myfigure}{Структурная схема автоматизированной системы измерений}{fig:system-structure}
     \begin{tikzpicture}[scale=0.9, transform shape]
       \tikzstyle{arrow}  = [->, thick]
       % item - общий стиль-предок для block, comp, control и user
@@ -735,7 +735,7 @@
   там же были показана важность многоканальных измерительных систем.
   Типичная схема реализации измерительного канала приведена на рис.~\ref{fig:channel-scheme}.
 
-  \begin{myfigure}{функциональная схема канала измерения}{fig:channel-scheme}
+  \begin{myfigure}{Функциональная схема канала измерения}{fig:channel-scheme}
     \begin{tikzpicture}[scale=0.9, transform shape]
       \tikzstyle{block} = [rectangle, theme1, rectangle, rounded corners,
                            text centered, text width=3cm, font=\footnotesize, minimum height=4em]
@@ -900,7 +900,7 @@
   Функциональная схема каналов измерения с применением микроконтроллера  представлена на
   рис.~\ref{fig:channel-with-microcontroller}.
 
-  \begin{myfigure}{схема каналов измерения с применением микроконтроллера}{fig:channel-with-microcontroller}
+  \begin{myfigure}{Схема каналов измерения с применением микроконтроллера}{fig:channel-with-microcontroller}
     \begin{tikzpicture}[scale=0.85, transform shape]
       \tikzstyle{arrow}  = [->, thick]
       \tikzstyle{cline}  = [thick, Blue] % линия управления: толстый синий
@@ -1347,7 +1347,7 @@
   усиливается дисбаланс между уровнями модели и контроллера: вся ответственность за обработку данных
   ложится на контроллер, из-за чего он становится крупным, сложно поддерживаемым модулем.
 
-  \begin{myfigure}{два варианта архитектуры MVC}{fig:mvc}
+  \begin{myfigure}{Два варианта архитектуры MVC}{fig:mvc}
     \newcommand{\FigMvcCommonPart}{
       \tikzstyle{arrow}= [->,thick]
       \tikzstyle{curved}=[bend right]
@@ -1633,7 +1633,7 @@
   Таким образом, архитектура основной программы приобретает вид, показанный на рис.~\ref{fig:main-arch}.
   Стрелками показано направление движения данных, пунктиром~--- реализация абстрактного класса.
 
-  \begin{myfigure}{архитектура основной программы}{fig:main-arch}
+  \begin{myfigure}{Архитектура основной программы}{fig:main-arch}
     \begin{tikzpicture}[scale=1.0, transform shape]
       \tikzstyle{arrow}  = [->, thick]
       \tikzstyle{impl}   = [-, thick, dashed]
@@ -1689,7 +1689,7 @@
   так как её функциональность не настолько велика, чтобы класс-контроллер оказался перегружен.
   На рис.~\ref{fig:stat-arch} представлена архитектура программы обработки накопленных данных.
 
-  \begin{myfigure}{архитектура программы обработки накопленных данных}{fig:stat-arch}
+  \begin{myfigure}{Архитектура программы обработки накопленных данных}{fig:stat-arch}
     \begin{tikzpicture}[scale=0.9, transform shape]
       \tikzstyle{arrow}  = [->, thick]
       \tikzstyle{label}  = [draw=none, fill=none, font=\footnotesize\em]
@@ -1769,7 +1769,7 @@
       входящему в состав Qt.
   \end{enumerate}
 
-  \includefigure[width=0.7\linewidth]{среда разработки Qt Creator в режиме визуального редактора.
+  \includefigure[width=0.7\linewidth]{Среда разработки Qt Creator в режиме визуального редактора.
     Видно большое разнообразие графических элементов, представление логической иерархии в виде
     дерева, а также редактор меню и сигналов-слотов.}{qt-creator}
 
@@ -1840,7 +1840,7 @@
 
   Основная программа разработана и протестирована на реальных сигналах. Внешний вид программы
   представлен на рис.~\ref{fig:main}.
-  \includefigure[width=0.85\textwidth]{основная программа}{main}
+  \includefigure[width=0.85\textwidth]{Основная программа}{main}
   % TODO ещё скриншот в Windows?
 
   Принцип работы пользователя с данной программой следующий. Для её работы необходимо подключить
@@ -1862,7 +1862,7 @@
   сигнала. Было выяснено, что программа может открывать файлы объёмом вплоть до \num{100000} записей
   и рассчитывать для них статистику без серьёзного замедления в работе. Внешний вид программы
   показан на рис.~\ref{fig:stat}.
-  \includefigure[width=0.6\textwidth]{программа обработки накопленных данных}{stat}
+  \includefigure[width=0.6\textwidth]{Программа обработки накопленных данных}{stat}
   % FIXME можно более подробно
 
   Помимо использования вместе с основной программой, данная программа может найти применение при
