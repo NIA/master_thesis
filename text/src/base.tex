@@ -2386,19 +2386,104 @@
   событийно-ориентированное программирование, а также организовать асинхронное взаимодействие между
   объектами, находящимися в разных потоках исполнения. В приведённых выше фрагментах кода есть
   примеры объявления как сигналов, так и слотов. Остаётся рассмотреть только то, как эти сигналы
-  соединяются со слотами для обеспечения требуемой логики поведения.
+  соединяются со слотами для обеспечения требуемой логики поведения. На рис.~\ref{fig:src-signals-slots}
+  приведены фрагменты кода основной программы, в которых упомянутые выше сигналы соединяются с
+  обрабатывающими их слотами, тем самым устанавливая взаимодействие между различными объектами.
 
   \begin{myfigure}{Примеры соединения сигналов и слотов}{fig:src-signals-slots}
-    % TODO навырезать примеров connect
+    \begin{lstlisting}[xleftmargin=0pt, xrightmargin=0pt, basicstyle=\footnotesize]
+      // Сигнал можно соединять с другим сигналом:
+      connect(protocolADC, &Protocol::dataAvailable, this, &Worker::dataUpdated);
+      // Управление потоками данных:
+      connect(worker, &Worker::dataUpdated, fileWriter, &FileWriter::receiveData);
+      for(TimePlot * plot: plots) {
+          connect(worker, &Worker::dataUpdated, plot, &TimePlot::receiveData);
+      }
+      connect(worker, &Worker::dataUpdated, mainWindow, &MainWindow::onDataReceive);
+      connect(protocolGPS, &Protocol::positionAvailable,
+              fileWriter,  &FileWriter::setCoordinates);
+      // Передача сообщений Logger в LogWindow:
+      connect(Logger::instance(), &Logger::messageAdded,
+              logWindow,          &LogWindow::addMessage);
+      // Лямбда-выражение в качестве обработчика сигнала:
+      connect(worker, &Worker::prepareFinished, [=](Worker::PrepareResult res){
+          if(res == Worker::PrepareSuccess) {
+            // (подготовиться к запуска)
+          } else {
+            // (обработать ошибку)
+          }
+      });
+    \end{lstlisting}
   \end{myfigure}
 
-  \todo{дописать}
+  Из показанных примеров видно, как именно передаются данные от протокола контроллеру (объекту
+  класса \inlinecode{Worker}) и далее от него объектам классов \inlinecode{FileWriter} и
+  \inlinecode{TimePlot} для записи в файл и отображения на графике, соответственно.
+  Следует отметить, что кроме стандартного соединения сигнала со слотом применяются также и другие
+  варианты: соединение сигнала с сигналом (позволяет создавать цепочки сигналов) и соединение
+  сигнала с лямбда-выражением (когда нет необходимости выделять обработчик в отдельный метод).
 
-  \paragraph{Сохранение настроек} % про Settings
+  \paragraph{Сохранение настроек}
+  Основная программа предоставляет широкий набор настроек, определяющих как параметры процесса
+  получения и сохранения данных, так и варианты представления в пользовательском интерфейсе. К числу
+  первых относятся имена и параметры COM-портов, директория и формат имени файла для сохранения,
+  частоты фильтра и выборки. За изменение поведения пользовательского интерфейса отвечают такие
+  настройки, как размер истории и масштаб графиков, и различные флаги: включение и отключение
+  уровней диагностических сообщений и отдельных панелей окна. Поскольку при повторных запусках
+  программы основная часть параметров остаётся неизменной, пользователю нужно будет совершать меньше
+  повторяющихся действий, если сохранять их значения между запусками. Для этого необходимо
+  записывать их в файл перед завершением программы и считывать из него при её запуске.
+
+  В Qt имеется стандартный класс \inlinecode{QSettings}, позволяющий сохранять настройки как в
+  простых INI-файлах, так и в специфичных для системы местах (реестр в Windows, файлы .plist в
+  MacOS). В описываемой программе используется формат INI, чтобы один и тот же конфигурационный
+  файл можно было использовать в разных операционных системах. При этом в коде программы класс
+  \inlinecode{QSettings} и его методы получения и сохранения значения по ключу не используются
+  напрямую. Чтобы избежать ошибок (путаницы с ключами INI-файла, использования неверного типа
+  данных) для работы с настройками используется класс \inlinecode{Settings}, в котором для каждой
+  настройки имеется по два метода: для чтения и записи значения. Это позволяет положиться на
+  проверку типов компилятором и избежать упомянутых выше ошибок.
 
   \subsubsection{Реализация программы обработки накопленных данных}
   
-  \todo{Здесь будут фрагменты кода программы обработки накопленных данных с комментариями}
+  Ниже рассмотрены некоторые особенности реализации программы обработки накопленных данных,
+  проиллюстрированные фрагментами программного кода и диаграммами классов.
+
+  \paragraph{Реализация архитектуры MVC.}
+
+  \begin{myfigure}{Диаграмма классов программы}{fig:stat-classes}
+    \begin{tikzpicture}[scale=0.8, transform shape]
+      \begin{umlpackage}[fill=color1bg]{Model}
+        \umlemptyclass{Statistic}
+        \umlemptyclass[below=1.5cm of Statistic.south east, anchor=north east]{Writer}
+        \umlemptyclass[left=5mm of Writer.north west, anchor=north east]{Reader}
+      \end{umlpackage}
+      \begin{umlpackage}[fill=color3bg]{Controller}
+        \umlemptyclass[right=1.5cm of Statistic.north east, anchor=north west]{Controller}
+      \end{umlpackage}
+      \begin{umlpackage}[fill=color0bg]{Util}
+        \umlemptyclass[below=1.3cm of Controller]{Logger}
+      \end{umlpackage}
+      \begin{umlpackage}[fill=color2bg]{View}
+        \umlemptyclass[right=1.5cm of Controller]{MainWindow}
+        \umlemptyclass[below=1.5cm of MainWindow.south west, anchor=north west]{LogWindow}
+        \umlemptyclass[right=7mm of MainWindow]{ReportWindow}
+      \end{umlpackage}
+      % связи:
+      %\umldep[geometry=|-]{FileWriter}{Protocol}
+      %\umluniassoc[geometry=|-]{Worker}{Protocol}
+      %\umluniassoc{MainWindow}{Worker}
+      %\umlunicompo{MainWindow}{TimePlot}
+      %\umlunicompo[geometry=|-|]{MainWindow}{LogWindow}
+      %\umlunicompo[geometry=|-|]{MainWindow}{StatsBox}
+      %\umldep{LogWindow}{Logger}
+      %\umldep[geometry=-|-, arm1=-7mm, anchor1=200]{Worker}{Settings}
+    \end{tikzpicture}
+  \end{myfigure}
+
+  \paragraph{Представление статистики}
+
+  \paragraph{Создание и печать отчёта}
 
   \subsection{Профилирование и оптимизация}
 
