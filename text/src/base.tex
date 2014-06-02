@@ -46,7 +46,8 @@
       texcl=true,            % комментарии - TeX, позволяет использовать русские буквы
       xleftmargin=1.5cm,       % дефолтные поля по 2см,
       xrightmargin=1.5cm,      % чтобы смотрелось как рисунок
-      morekeywords={signals, slots, emit}, % ключевые слова Qt MOC
+      morekeywords={nullptr, override,
+        signals, slots, emit}, % ключевые слова Qt MOC и C++11
       breaklines=true,       % включить авто переносы
       breakatwhitespace=false, % разрешить переносить не только по пробелу
       showstringspaces=false % не подчёркивать пробелы в строках
@@ -2082,7 +2083,7 @@
       {
           Q_OBJECT
       public:
-          explicit Protocol(QObject * parent = 0);
+          explicit Protocol(QObject * parent = nullptr);
           virtual QString description() = 0;
           State state() const { return state_; }
 
@@ -2166,7 +2167,7 @@
       {
           Q_OBJECT
       public:
-          explicit FileWriter(QString outputDirectory, QString fileNameFormat, QObject *parent = 0);
+          explicit FileWriter(QString outputDirectory, QString fileNameFormat, QObject *parent = nullptr);
           bool isAutoWriteEnabled() const;
           QString buildFileName() const;
           ~FileWriter();
@@ -2222,7 +2223,7 @@
           enum PrepareResult { ... };
           enum StartResult { ... };
 
-          Worker(Protocol* protADC, Protocol* protGPS, QObject *parent = 0);
+          Worker(Protocol* protADC, Protocol* protGPS, QObject *parent = nullptr);
 
           bool isPrepared() { return prepared; }
           bool isStarted() { return started; }
@@ -2279,7 +2280,7 @@
 
   Если же требуется добавление функциональности, особенно собственных сигналов и слотов, необходимо
   выделять собственный компонент в отдельный класс. В случае, если нужно изменить или расширить
-  поведение одного конкретного компонента, новый класс наследуется от класса исходного компонента и
+  поведение некоторого компонента, новый класс наследуется от класса исходного компонента и
   в нём переопределяются или добавляются методы, сигналы и слоты. После этого объект нового класса
   может использоваться везде, где использовался объект исходного класса. Такой подход используется в
   данной работе для добавления к компоненту \inlinecode{QwtPlot}, представляющему двумерный график
@@ -2294,30 +2295,104 @@
       {
           Q_OBJECT
       public:
-          explicit TimePlot(QWidget *parent = 0);
-
+          explicit TimePlot(QWidget *parent = nullptr)
+              : QwtPlot(parent)
+          {
+              QwtPlotGrid * grid = new QwtPlotGrid;
+              grid->setMajorPen(QPen(GRID_COLOR));
+              grid->setMinorPen(QPen(GRID_COLOR, 1, Qt::DashLine));
+              grid->attach(this);
+              curve = new QwtPlotCurve;
+              curve->setPen(CURVE_COLOR, CURVE_WIDTH);
+              curve->setOrientation(Qt::Vertical);
+              curve->attach(this);
+          }
       public slots:
           // Слот для получения данных от Protocol
           void receiveData(TimeStampsVector timestamps, DataVector items);
           void clearHistory();
-
           // Настройки
           void setPointsPerSec(int value);
           void setHistorySecs(double secs);
           void setFixedScaleY(bool fixed);
           void setFixedScaleYMax(double max);
-
       private:
+          QwtPlotCurve * curve;
           // Буфер для хранения истории
           QVector<QPointF> buffer;
       };
     \end{lstlisting}
   \end{myfigure}
 
-  \todo{дописать}
+  Этот класс является примером расширения с целью добавления новых функций и нового программного
+  интерфейса, а также инкапсуляции некоторых параметров (в данном случае~--- \inlinecode{grid} и
+  \inlinecode{curve}). Изменения существующей функциональности за счёт переопределения методов
+  здесь не происходит. Примером такого переопределения является класс \inlinecode{LogWindow},
+  который расширяет функциональность стандартного текстового поля для того, чтобы его можно было
+  использовать для отображения сообщений журнала. Объявление этого класса, а также класса
+  \inlinecode{Logger}, который повсеместно используется в коде для добавления диагностических
+  сообщений, приведено на рис.~\ref{fig:src-logwindow}.
+
+  \begin{myfigure}{Пример расширения стандартного графического компонента с переопределением функциональности}{fig:src-logwindow}
+    \begin{lstlisting}
+      class Logger : public QObject
+      {
+          Q_OBJECT
+      public:
+          enum Level { Trace, Info, Warning, Error };
+          // Реализация шаблона проектирования Singleton
+          static Logger * instance();
+
+          void addMessage(Level level, QString message);
+          void setLevelEnabled(Level level, bool value);
+      signals:
+          void messageAdded(Level level, QString message);
+      private:
+          // Запрещает создание и копирование
+          Logger();
+          Q_DISABLE_COPY(Logger)
+      };
+
+      class LogWindow : public QPlainTextEdit
+      {
+          Q_OBJECT
+      public:
+          explicit LogWindow(QWidget *parent = nullptr);
+          virtual ~LogWindow();
+      signals:
+          void closed();
+      public slots:
+          void addMessage(Logger::Level level, QString message);
+      protected:
+          void contextMenuEvent(QContextMenuEvent *e) override;
+          void closeEvent(QCloseEvent *) override;
+      };
+    \end{lstlisting}
+  \end{myfigure}
+
+  В этом примере, как и в предыдущем, к классу добавляется новый интерфейс в виде новых сигнала и
+  слота, но кроме этого переопределяются некоторые методы родительского класса \inlinecode{QPlainTextEdit}
+  для изменения поведения при вызове контекстного меню и при закрытии окна.
+
+  Класс \inlinecode{Logger}, который также приведён на рис.~\ref{fig:src-logwindow}, является
+  примером гибкой реализации процесса журналирования. В клиентском коде можно настроить любой способ
+  обработки сообщений журнала (вывод на экран, запись в файл и т.\,п.) путём соединения сигнала
+  \inlinecode{messageAdded} с различными слотами или вообще отключить часть видов сообщений.
+  В ядре при этом сообщения добавляются единообразно путём получения экземпляра класса-одиночки с
+  помощью метода \inlinecode{instance} и последующего вызова \inlinecode{addMessage}.
 
   \paragraph{Использование сигналов и слотов.}
-  \todo{написать раздел} % здесь же про Logger
+  Выше было неоднократно упомянуто, что использование сигналов и слотов Qt позволяет реализовать
+  событийно-ориентированное программирование, а также организовать асинхронное взаимодействие между
+  объектами, находящимися в разных потоках исполнения. В приведённых выше фрагментах кода есть
+  примеры объявления как сигналов, так и слотов. Остаётся рассмотреть только то, как эти сигналы
+  соединяются со слотами для обеспечения требуемой логики поведения.
+
+  \begin{myfigure}{Примеры соединения сигналов и слотов}{fig:src-signals-slots}
+    % TODO навырезать примеров connect
+  \end{myfigure}
+
+  \todo{дописать}
 
   \paragraph{Сохранение настроек} % про Settings
 
