@@ -2408,7 +2408,7 @@
       // Лямбда-выражение в качестве обработчика сигнала:
       connect(worker, &Worker::prepareFinished, [=](Worker::PrepareResult res){
           if(res == Worker::PrepareSuccess) {
-            // (подготовиться к запуска)
+            // (подготовиться к запуску)
           } else {
             // (обработать ошибку)
           }
@@ -2449,39 +2449,84 @@
   Ниже рассмотрены некоторые особенности реализации программы обработки накопленных данных,
   проиллюстрированные фрагментами программного кода и диаграммами классов.
 
-  \paragraph{Реализация архитектуры MVC.}
+  \paragraph{Диаграмма классов} программы обработки накопленных данных приведена на рис.~\ref{fig:stat-classes}.
 
   \begin{myfigure}{Диаграмма классов программы}{fig:stat-classes}
     \begin{tikzpicture}[scale=0.8, transform shape]
       \begin{umlpackage}[fill=color1bg]{Model}
         \umlemptyclass{Statistic}
-        \umlemptyclass[below=1.5cm of Statistic.south east, anchor=north east]{Writer}
-        \umlemptyclass[left=5mm of Writer.north west, anchor=north east]{Reader}
-      \end{umlpackage}
-      \begin{umlpackage}[fill=color3bg]{Controller}
-        \umlemptyclass[right=1.5cm of Statistic.north east, anchor=north west]{Controller}
+        \umlemptyclass[below=1.5cm of Statistic]{Reader}
+        \umlemptyclass[right=1cm of Reader]{Writer}
       \end{umlpackage}
       \begin{umlpackage}[fill=color0bg]{Util}
-        \umlemptyclass[below=1.3cm of Controller]{Logger}
+        \umlemptyclass[right=1.5cm of Writer]{Logger}
+      \end{umlpackage}
+      \begin{umlpackage}[fill=color3bg]{Controller}
+        \umlemptyclass[above=1.5cm of Logger]{Actions}
       \end{umlpackage}
       \begin{umlpackage}[fill=color2bg]{View}
-        \umlemptyclass[right=1.5cm of Controller]{MainWindow}
-        \umlemptyclass[below=1.5cm of MainWindow.south west, anchor=north west]{LogWindow}
+        \umlemptyclass[right=1.5cm of Actions]{MainWindow}
+        \umlemptyclass[below=1.5cm of MainWindow]{LogWindow}
         \umlemptyclass[right=7mm of MainWindow]{ReportWindow}
       \end{umlpackage}
       % связи:
-      %\umldep[geometry=|-]{FileWriter}{Protocol}
-      %\umluniassoc[geometry=|-]{Worker}{Protocol}
-      %\umluniassoc{MainWindow}{Worker}
-      %\umlunicompo{MainWindow}{TimePlot}
-      %\umlunicompo[geometry=|-|]{MainWindow}{LogWindow}
-      %\umlunicompo[geometry=|-|]{MainWindow}{StatsBox}
-      %\umldep{LogWindow}{Logger}
-      %\umldep[geometry=-|-, arm1=-7mm, anchor1=200]{Worker}{Settings}
+      \umluniassoc{MainWindow}{Actions}
+      \umluniassoc{Actions}{Statistic}
+      \umluniassoc[geometry=-|-,arm1=-7mm,anchor1=west]{Actions}{Writer}
+      \umluniassoc[geometry=-|-,arm1=-4cm,anchor1=west]{Actions}{Reader}
+      %\umldep[geometry=-|-, arm1=-7mm, anchor1=200]{Actions}{Settings}
+      \umlunicompo{MainWindow}{ReportWindow}
+      \umlunicompo{MainWindow}{LogWindow}
+      \umldep{LogWindow}{Logger}
     \end{tikzpicture}
   \end{myfigure}
 
-  \paragraph{Представление статистики}
+  При этом многое из описанного выше касательно основной программы относится и к программе обработки
+  накопленных данных: использование сигналов и слотов, классы \inlinecode{Logger} и
+  \inlinecode{LogWindow}, подходы к расширению существующих компонентов графического интерфейса.
+  Далее отдельно рассмотрены такие аспекты программной реализации данной программы как внутреннее
+  представление выборки в программе, а также отображение и печать отчёта.
+
+  \paragraph{Представление выборки}
+  Выбор представления данных в программе определяется тем, как эти данные должны использоваться. В
+  данном случае должна иметься возможность их представления в виде таблицы и в виде графика.
+
+  \begin{myfigure}{Представление выборки в программе: класс Statistic}{fig:src-statistic}
+    \begin{lstlisting}
+      class Statistic : public QObject
+      {
+          Q_OBJECT
+      public:
+          explicit Statistic(QObject *parent, QList<double> data, QString header = "", bool modified = false);
+          void append(QList<double> newData);
+          void remove(QModelIndexList rows);
+          // Варианты представления данных
+          QStandardItemModel * itemModel();
+          QList<double> rawData() const;
+          QVector<QwtIntervalSample> histogramSamples() const;
+          QVector<QPointF> dataPoints() const;
+          QString dataAsHtmlTable(int columns) const;
+          // Статистические величины:
+          int number() const;
+          double min() const;
+          double max() const;
+          double average() const;
+          double dispersion() const;
+          double stdDeviation() const;
+          double thirdMoment() const;
+          double fourthMoment() const;
+      signals:
+          void statisticChanged();
+          void histogramChanged();
+          void modified();
+      public slots:
+          void onItemChanged(QStandardItem * item);
+          void onValueChanged(int index, double newValue);
+          void onHistogramIntervalsChanged(int newValue);
+          void onHistogramFractionChanged(int newValue);
+      };
+    \end{lstlisting}
+  \end{myfigure}
 
   \paragraph{Создание и печать отчёта}
 
