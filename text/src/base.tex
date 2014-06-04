@@ -2446,45 +2446,11 @@
 
   \subsubsection{Реализация программы обработки накопленных данных}
 
-  Ниже рассмотрены некоторые особенности реализации программы обработки накопленных данных,
-  проиллюстрированные фрагментами программного кода и диаграммами классов.
-
-  \paragraph{Диаграмма классов} программы обработки накопленных данных приведена на рис.~\ref{fig:stat-classes}.
-
-  \begin{myfigure}{Диаграмма классов программы}{fig:stat-classes}
-    \begin{tikzpicture}[scale=0.8, transform shape]
-      \begin{umlpackage}[fill=color1bg]{Model}
-        \umlemptyclass{Statistic}
-        \umlemptyclass[below=1.5cm of Statistic]{Reader}
-        \umlemptyclass[right=1cm of Reader]{Writer}
-      \end{umlpackage}
-      \begin{umlpackage}[fill=color0bg]{Util}
-        \umlemptyclass[right=1.5cm of Writer]{Logger}
-      \end{umlpackage}
-      \begin{umlpackage}[fill=color3bg]{Controller}
-        \umlemptyclass[above=1.5cm of Logger]{Actions}
-      \end{umlpackage}
-      \begin{umlpackage}[fill=color2bg]{View}
-        \umlemptyclass[right=1.5cm of Actions]{MainWindow}
-        \umlemptyclass[below=1.5cm of MainWindow]{LogWindow}
-        \umlemptyclass[right=7mm of MainWindow]{ReportWindow}
-      \end{umlpackage}
-      % связи:
-      \umluniassoc{MainWindow}{Actions}
-      \umluniassoc{Actions}{Statistic}
-      \umluniassoc[geometry=-|-,arm1=-7mm,anchor1=west]{Actions}{Writer}
-      \umluniassoc[geometry=-|-,arm1=-4cm,anchor1=west]{Actions}{Reader}
-      %\umldep[geometry=-|-, arm1=-7mm, anchor1=200]{Actions}{Settings}
-      \umlunicompo{MainWindow}{ReportWindow}
-      \umlunicompo{MainWindow}{LogWindow}
-      \umldep{LogWindow}{Logger}
-    \end{tikzpicture}
-  \end{myfigure}
-
+  Ниже рассмотрены некоторые особенности реализации программы обработки накопленных данных.
   При этом многое из описанного выше касательно основной программы относится и к программе обработки
   накопленных данных: использование сигналов и слотов, классы \inlinecode{Logger} и
   \inlinecode{LogWindow}, подходы к расширению существующих компонентов графического интерфейса.
-  Далее отдельно рассмотрены такие аспекты программной реализации данной программы как внутреннее
+  Далее отдельно рассмотрены такие аспекты программной реализации данной программы, как внутреннее
   представление выборки в программе, а также отображение и печать отчёта.
 
   \paragraph{Представление выборки.}
