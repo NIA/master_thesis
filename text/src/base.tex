@@ -817,6 +817,33 @@
     \end{tikzpicture}
   \end{myfigure}
 
+  % Картинка для презентации (TODO включить её и в текст - после GPS?)
+  %\begin{myfigure}{Упрощённая схема измерительной системы с применением микроконтроллера и GPS}{fig:system-simple}
+  %  \begin{tikzpicture}[scale=0.9, transform shape]
+  %    \tikzstyle{arrow}  = [->, thick]
+  %    \tikzstyle{sync}  = [arrow, dashed]
+  %    % item - общий стиль-предок для block, comp, control и user
+  %    \tikzstyle{item}   = [rectangle, rounded corners, text centered, font=\footnotesize, minimum height=3em]
+  %    \tikzstyle{block}  = [item, theme0, text width=2.5cm]
+  %    \tikzstyle{comp}   = [item, theme2, text width=2cm, font=\small, minimum height=8em]
+  %    \tikzstyle{object} = [circle, theme0, text centered, text width=2.2cm, font=\footnotesize]
+  %    % Блоки верхнего ряда (b = block)
+  %    \node[object] (b0) {Исследуемый\\объект};
+  %    \node[block]  (b1) [right=0.75cm of b0] {Датчики};
+  %    \node[block]  (b2) [right=0.75cm of b1] {Каналы\\измерений};
+  %    \node[block]  (b3) [right=0.75cm of b2] {Микро\-контроллер};
+  %    \node[comp] (Comp) [right=0.75cm of b3, shift={(0,1)}] {ЭВМ};
+  %    \node[block] (GPS) [above=0.75cm of b3] {GPS приёмник};  
+  %    % Стрелки между блоками
+  %    \foreach \from/\to in {b0/b1, b1/b2, b2/b3}
+  %      \draw [arrow] (\from) -- (\to);
+  %    \draw [arrow] (b3) -- (b3-|Comp.west);
+  %    \draw [sync] (GPS) -- (GPS-|Comp.west);
+  %    \draw [sync] (GPS) -- (b3);
+  %    \draw [sync] (GPS) -| (b2);
+  %  \end{tikzpicture}
+  %\end{myfigure}
+
   Данные об исследуемом объекте от специализированных датчиков физических величин
   поступают на вход каналов измерения, которые выполняют функции фильтрации, масштабирования,
   аналого-цифрового преобразования, коррекции данных. Затем данные по каналам связи поступают в
