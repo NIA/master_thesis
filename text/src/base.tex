@@ -12,6 +12,7 @@
   \usepackage{amsthm} % для \pushQED
   \usepackage[usenames,dvipsnames]{xcolor}
   \usepackage[pdftex]{graphicx}
+    \graphicspath{{../img/}{../../img/}}
   \usepackage{subfig}
   \usepackage{numprint}
   \usepackage[left=30mm,right=15mm,top=20mm,bottom=20mm,bindingoffset=0cm]{geometry}
@@ -32,7 +33,6 @@
     \newcommand{\deftheme}[1]{\tikzstyle{theme#1}  = [draw=color#1,  fill=color#1bg]}
     \deftheme{0}\deftheme{1}\deftheme{1a}\deftheme{2}\deftheme{3}\deftheme{4}\deftheme{5}
   \usepackage[babel,protrusion=true,expansion]{microtype}
-  \usepackage{nameref}
   \usepackage[labelsep=endash]{caption} % тире в подписях рисунков, таблиц
   \usepackage{listings}
     \lstloadlanguages{C++}
@@ -70,7 +70,15 @@
     \newcounter{firstpage}
     \newcommand\firstPageHere{\setcounter{firstpage}{\value{page}}}
     \newcommand\lastPageHere{\setcounter{pagenum}{\value{page} - \value{firstpage}}}
-  \graphicspath{{../img/}{../../img/}}
+  \usepackage{titlesec}
+    \titlespacing{\paragraph}{\parindent}{0pt}{1em} % \paragraph без вертикального пропуска, но с абзацным отступом
+    % Все заголовки: обычный размер шрифта, абзацный отступ, пропуск одной строки до и после заголовка
+    \titleformat*{\section}{\normalfont\normalsize\bfseries}
+    \titlespacing{\section}{\parindent}{0pt}{\baselineskip}
+    \titleformat*{\subsection}{\normalfont\normalsize\bfseries}
+    \titlespacing{\subsection}{\parindent}{\baselineskip}{\baselineskip}
+    \titleformat*{\subsubsection}{\normalfont\normalsize\bfseries}
+    \titlespacing{\subsubsection}{\parindent}{\baselineskip}{\baselineskip}
   \frenchspacing
 
   \DeclareSymbolFont{T2Aletters}{T2A}{cmr}{m}{it} % кириллица в формулах курсивом
@@ -130,16 +138,6 @@
   % разделы с новой страницы
   \let\oldsection\section
   \renewcommand{\section}{\newpage\oldsection}
-
-  % \paragraph с обычным отступом первой строки слева, без отступа сверху
-  % (http://tex.stackexchange.com/a/4895/24732)
-  \makeatletter
-  \renewcommand{\paragraph}{%
-    \@startsection{paragraph}{4}%
-    {\parindent}{\z@}{-1em}% was: {\z@}{3.25ex \@plus 1ex \@minus .2ex}{-1em}
-    {\normalfont\normalsize\bfseries}%
-  }
-  \makeatother
 
   \setcounter{tocdepth}{3} % глубина оглавления
 
@@ -1675,7 +1673,7 @@
   \section[Универсальная информационная система обработки экспериментальных данных]%
           {Универсальная информационная система\\обработки экспериментальных данных}\label{sec:my-system}
 
-  Как уже было сказано выше в~разделе \nameref{sec:intro},
+  Как уже было сказано во введении,
   целью работы является повышение эффективности и достоверности процессов автоматизированной
   обработки измерительных сигналов. С этой целью разрабатывается универсальная информационная
   система обработки экспериментальных данных,
@@ -1789,7 +1787,6 @@
   В последующих подразделах описана архитектура этих программ и технологии, используемые при их
   разработке с учётом решений, описанных выше, в подразделе \ref{ssec:methods}.
 
-  % TODO поиграться с отступами до и после [sub]subsection (хотя имхо и так отлично)
   \subsection{Архитектура компонентов системы}\label{ssec:arch}
 
   Основная программа и программа обработки накопленных данных имеют совершенно разные сценарии
@@ -2885,6 +2882,7 @@
   планируется расширение набора поддерживаемых протоколов для получения данных и добавление новых
   операций обработки данных, а также ещё более глубокое применение параллельных вычислений.
 
+                                             % TODO номер свидетельства?
   Разработанные программы зарегистрированы в реестре программ для ЭВМ. Работа была представлены на
   заседании Студенческого научного общества физико-технического факультета КубГУ и награждена
   дипломом третьей степени, а также на X Всероссийской научной конференции молодых ученых и
@@ -2892,6 +2890,9 @@
 
   \lastPageHere
 
+  % TODO нарезать диск с текстом диплома и презентацией!
+
+  % FIXME Не [1] [2] [3], а 1. 2. 3.
   % TODO обновить \checkdate во всех интернет-источниках!
   \begin{flushleft}
     \bibliographystyle{../../biblio/ugost2003} % Или использовать ugost2008 для нового ГОСТа
