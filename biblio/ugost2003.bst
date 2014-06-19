@@ -67,6 +67,10 @@ ENTRY
     eprinttype   % = archivePrefix
     eprintclass  % = primaryClass
     eprint
+    % NIA - для progcertificate (свидетельство о регистрации программы для ЭВМ):
+    regdate     % - дата регистрации
+    applnumber % - номер заявки
+    appldate   % - дата заявки
   }
   {}
   { label }
@@ -1722,6 +1726,54 @@ FUNCTION {techreport}
   new.block
   note output
   format.annote output
+  fin.entry
+}
+
+% NIA - начало записи progcertificate
+FUNCTION {format.regnumber}
+{
+  number empty$
+    { "" }
+    { "Свидетельство о государственной регистрации программы для ЭВМ, №" number * }
+  if$
+}
+% NIA - вывод даты регистрации (progcertificate)
+FUNCTION {format.regdate}
+{
+  regdate empty$
+    { "" }
+    { "зарег.: " regdate * }
+  if$
+}
+% NIA - вывод номера заявки (progcertificate)
+FUNCTION {format.applnumber}
+{
+  applnumber empty$
+    { "" }
+    { "заявка №" applnumber * }
+  if$
+}
+% NIA - вывод даты заявки (progcertificate) - почему-то пишется "опубл.:"
+FUNCTION {format.appldate}
+{
+  appldate empty$
+    { "" }
+    { "опубл.: " appldate * }
+  if$
+}
+% NIA - свидетельство о регистрации программы для ЭВМ:
+FUNCTION {progcertificate}
+{
+  output.bibitem
+  format.regnumber output
+  new.sentence
+  format.title output
+  new.slash
+  author.after
+  new.block
+  format.regdate output
+  format.applnumber output
+  format.appldate output
   fin.entry
 }
 
