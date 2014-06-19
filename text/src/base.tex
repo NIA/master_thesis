@@ -79,6 +79,19 @@
     \titlespacing{\subsection}{\parindent}{\baselineskip}{\baselineskip}
     \titleformat*{\subsubsection}{\normalfont\normalsize\bfseries}
     \titlespacing{\subsubsection}{\parindent}{\baselineskip}{\baselineskip}
+  \usepackage{enumitem}
+    % Убираем пропуски вокруг списков и между их элементами
+    \setlist{nosep}
+    % Фикс для подпунктов а), б) ...
+    \AddEnumerateCounter{\Asbuk}{\@Asbuk}{Ы}
+    \AddEnumerateCounter{\asbuk}{\@asbuk}{ы}
+    % Отдельно фиксим пропуски в библиографии
+    \let\oldthebibliography\thebibliography
+    \renewcommand\thebibliography[1]{
+      \oldthebibliography{#1}
+      \setlength{\parskip}{0pt}
+      \setlength{\itemsep}{0pt plus 0.3ex}
+    }
   \frenchspacing
 
   \DeclareSymbolFont{T2Aletters}{T2A}{cmr}{m}{it} % кириллица в формулах курсивом
@@ -239,7 +252,7 @@
   \sectiontoc{Реферат}
 
   Магистерская диссертация: \total{page} страниц, % можно заменить на \total{pagenum} для числа страниц от введения до заключения
-  \total{figure} рисунка, \total{citnum} источник.
+  \total{figure} рисунка, \total{citnum} источника.
 
   Автоматизация эксперимента, измерительные информационные системы, программное обеспечение,
   обработка сигналов.
@@ -2311,7 +2324,7 @@
   Первый случай более прост и может быть реализован без введения новых классов. Комбинация из
   стандартных компонентов может быть описана в виде .ui-файла (XML-файлы, создаваемые инструментом
   \eng{Qt Designer}), который затем может быть использован как на этапе компиляции, так и во время
-  исполнения.
+  исполнения \cite{qt-ui-file}.
 
   Если же требуется добавление функциональности, особенно собственных сигналов и слотов, необходимо
   выделять собственный компонент в отдельный класс. В случае, если нужно изменить или расширить
