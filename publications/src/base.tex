@@ -38,6 +38,19 @@
     \renewcommand\refname{\thetitle}
   }
 
+  % Убираем пропуски между пунктами в библиографии
+  \let\oldthebibliography\thebibliography
+  \renewcommand\thebibliography[1]{
+    \oldthebibliography{#1}
+    \setlength{\parskip}{0pt}
+    \setlength{\itemsep}{0pt plus 0.3ex}
+  }
+
+  % нумерация в списке использованных источников в виде 1. 2. 3., а не [1] [2] [3]
+  \makeatletter
+  \renewcommand\@biblabel[1]{#1.}
+  \makeatother
+
   \author{\theauthor, \theinstitute}
   \title{\thetitle}
 
