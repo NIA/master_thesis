@@ -116,6 +116,11 @@
   % выделение термина в определении (и не только)
   \newcommand{\term}[1]{\emph{#1}}
 
+  \newsavebox\hiddenbox
+  \newenvironment{hidden}%
+    {\begin{lrbox}{\hiddenbox}}%
+    {\end{lrbox}\phantom{\usebox{\hiddenbox}}}
+
   % обёртка с моими настройками поверх figure:
   % \begin{myfigure}{подпись}{fig:label} ... \end{myfigure}
   \newenvironment{myfigure}[2]%
@@ -124,12 +129,16 @@
     {  \popQED % pop caption & label
      \end{figure}}
 
+  \newenvironment{myfigurehidden}[2]%
+    {\begin{myfigure}{#1}{#2}\begin{hidden}}%
+    {\end{hidden}\end{myfigure}}
+
   % вставка картинки: \figure[params]{подпись}{file}
   % создаёт label вида fig:file
   \newcommand{\includefigure}[3][]{
-    \begin{myfigure}{#2}{fig:#3}
+    \begin{myfigurehidden}{#2}{fig:#3}
       \includegraphics[#1]{#3}
-    \end{myfigure}
+    \end{myfigurehidden}
   }
 
   % вставка subfigure внутри myfigure:
@@ -182,14 +191,6 @@
       Subject = {}
     }
   }
-
-  % white color for all text
-  \color{white}
-  \lstset{commentstyle=\itshape\color{white}}
-  % except tikz figures
-  \tikzstyle{every node}=[text=black]
-  \tikzstyle{every edge}=[draw=black]
-  \tikzstyle{every path}=[color=black]
 
 \begin{document}
 
@@ -501,7 +502,7 @@
   в~устройстве, которое называется масштабным преобразователем \cite[с.~16]{volkov-iis}.
   В~упрощённом виде алгоритм процесса измерения представлен на рис.~\ref{fig:meas-algo}.
 
-  \begin{myfigure}{Структурная схема алгоритма измерения}{fig:meas-algo}
+  \begin{myfigurehidden}{Структурная схема алгоритма измерения}{fig:meas-algo}
     \begin{tikzpicture}[scale=1.0, transform shape]
       \tikzstyle{arrow}  = [->, thick]
       \tikzstyle{onarrow} = [pos=0.5, font=\footnotesize]
@@ -519,7 +520,7 @@
       \draw[arrow] (check) -- (corr) node[onarrow,below]{Нет};
       \draw[arrow] (corr)  |- (meas);
     \end{tikzpicture}
-  \end{myfigure}
+  \end{myfigurehidden}
 
   Рассмотрим также некоторые термины, связанные непосредственно с самими измерительными информационными
   системами.
@@ -546,7 +547,7 @@
   системы, заданное функционирование комплекса технических средств ИИС и контроль за процессом измерения.
   Схема взаимодействие этих составляющих ИИС представлена на рис.~\ref{fig:iis-components}.
 
-  \begin{myfigure}{Схема взаимодействия основных компонентов измерительных информационных систем}{fig:iis-components}
+  \begin{myfigurehidden}{Схема взаимодействия основных компонентов измерительных информационных систем}{fig:iis-components}
     \begin{tikzpicture}[scale=1.0, transform shape]
       \tikzstyle{arrow}  = [->, thick]
       \tikzstyle{biarrow}  = [<->, very thick]
@@ -582,7 +583,7 @@
       \end{pgfonlayer}
 
     \end{tikzpicture}
-  \end{myfigure}
+  \end{myfigurehidden}
 
   \term{Совместимость ИИС}~--- возможность взаимосвязанного функционирования измерительных систем разных уровней и
   различного функционального назначения.
@@ -644,7 +645,7 @@
   \end{itemize}
   В графическом виде эти основные функции представлены на рис.~\ref{fig:iis-functions}.
 
-  \begin{myfigure}{Основные функции ИИС, наиболее фундаментальные выделены}{fig:iis-functions}
+  \begin{myfigurehidden}{Основные функции ИИС, наиболее фундаментальные выделены}{fig:iis-functions}
     \begin{tikzpicture}[scale=0.9, transform shape]
       \tikzstyle{arrow}  = [->, thick]
       \tikzstyle{block} = [rectangle, theme1, rounded corners, minimum height=2em,
@@ -666,7 +667,7 @@
       \draw[arrow]     (ctrl.west) -- ++(-5mm, 0);
       \draw[arrow]     (tran.east) -- ++(5mm, 0);
     \end{tikzpicture}
-  \end{myfigure}
+  \end{myfigurehidden}
 
   В зависимости от требований конкретной задачи, стоящей перед ИИС, этот краткий список функций
   может изменяться и пополняться. При этом первые три являются наиболее фундаментальными и
@@ -800,7 +801,7 @@
   Перечисленные в подразделе~\ref{ssec:iis-requirements} принципы позволяют сформировать наиболее
   общую структуру автоматизированной системы управления экспериментом (рис.~\ref{fig:system-structure}).
 
-  \begin{myfigure}{Структурная схема автоматизированной системы измерений}{fig:system-structure}
+  \begin{myfigurehidden}{Структурная схема автоматизированной системы измерений}{fig:system-structure}
     \begin{tikzpicture}[scale=0.9, transform shape]
       \tikzstyle{arrow}  = [->, thick]
       % item - общий стиль-предок для block, comp, control и user
@@ -846,7 +847,7 @@
       \draw [<-, very thick, red] (b0.west) -- ++(-0.5cm, 0cm) |- (Control);
 
     \end{tikzpicture}
-  \end{myfigure}
+  \end{myfigurehidden}
 
   % Картинка для презентации (TODO включить её и в текст - после GPS?)
   %\begin{myfigure}{Упрощённая схема измерительной системы с применением микроконтроллера и GPS}{fig:system-simple}
@@ -891,7 +892,7 @@
   там же были показана важность многоканальных измерительных систем.
   Типичная схема реализации измерительного канала приведена на рис.~\ref{fig:channel-scheme}.
 
-  \begin{myfigure}{Функциональная схема канала измерения}{fig:channel-scheme}
+  \begin{myfigurehidden}{Функциональная схема канала измерения}{fig:channel-scheme}
     \begin{tikzpicture}[scale=0.9, transform shape]
       \tikzstyle{block} = [rectangle, theme1, rectangle, rounded corners,
                            text centered, text width=3cm, font=\footnotesize, minimum height=4em]
@@ -918,7 +919,7 @@
       \node[fit=(c0)(c3)(c5)(u1)(title),around]{\hspace*{\fill}~}; % hspace - хак, чтобы подавить underfull hbox
       % TODO поправить сборку на новом tikz: fit и transform shape не дружат (здесь и в umlpackage)
     \end{tikzpicture}
-  \end{myfigure}
+  \end{myfigurehidden}
 
   При такой схеме данные с датчика физических величин поступают на масштабный преобразователь (например, усилитель),
   назначение которого связанно с преобразованием уровня аналогового сигнала до приемлемого значения.
@@ -1057,7 +1058,7 @@
   Функциональная схема каналов измерения с применением микроконтроллера  представлена на
   рис.~\ref{fig:channel-with-microcontroller}.
 
-  \begin{myfigure}{Схема каналов измерения с применением микроконтроллера}{fig:channel-with-microcontroller}
+  \begin{myfigurehidden}{Схема каналов измерения с применением микроконтроллера}{fig:channel-with-microcontroller}
     \begin{tikzpicture}[scale=0.85, transform shape]
       \tikzstyle{arrow}  = [->, thick]
       \tikzstyle{cline}  = [thick, Blue] % линия управления: толстый синий
@@ -1125,7 +1126,7 @@
       \draw[arrow] (MCU.east) -- ++(1, 0);
 
     \end{tikzpicture}
-  \end{myfigure}
+  \end{myfigurehidden}
 
   Данные от датчиков физических величин поступают на масштабные преобразователи измерительных
   каналов. Использование при этом микроконтроллера с обратной связью позволяет повысить точность
@@ -1522,17 +1523,21 @@
         \draw[arrow]  (ctrl)  edge [curved] node[txt]{изменяет}  (model);
     }
     \subfloat[С пассивной моделью]{\label{fig:mvc-passive}
+      \begin{hidden}
       \begin{tikzpicture}[scale=1.0, transform shape]
         \FigMvcCommonPart
         \draw[arrow]        (ctrl) edge node[txt, rotate=90]{обновляет}     (view) ;
       \end{tikzpicture}
+      \end{hidden}
     }
     \hspace{0.05\textwidth}
     \subfloat[С активной моделью]{\label{fig:mvc-active}
+      \begin{hidden}
       \begin{tikzpicture}[scale=1.0, transform shape]
         \FigMvcCommonPart
         \draw[arrow]  (model) edge [curved] node[txt]{обновляет} (view) ;
       \end{tikzpicture}
+      \end{hidden}
     }
   \end{myfigure}
 
@@ -1580,7 +1585,7 @@
   Окончательное решение данной задачи содержит шаблон проектирования \term{абстрактная фабрика}
   (англ. \eng{Abstract Factory}). UML-диаграмма классов представлена на рис.~\ref{fig:abstract-factory}.
 
-  \begin{myfigure}{Абстрактная фабрика протоколов}{fig:abstract-factory}
+  \begin{myfigurehidden}{Абстрактная фабрика протоколов}{fig:abstract-factory}
     \begin{tikzpicture}[scale=0.8, transform shape]
       \tikzumlset{font=\footnotesize}
       \begin{umlpackage}[fill=black!10]{Core}
@@ -1604,7 +1609,7 @@
       \umlassoc{Controller}{ProtocolFactory}
       \umldep[geometry=|-, anchor2=north west, stereo=use]{Controller}{Protocol}
     \end{tikzpicture}
-  \end{myfigure}
+  \end{myfigurehidden}
 
   Вводится ещё один интерфейс~--- фабрика протоколов, который реализуется классом конкретной
   фабрики, своим для каждой реализации протокола. Получая одну из реализаций фабрики, контроллер
@@ -1780,7 +1785,7 @@
   Схема системы и способы взаимодействия входящих в её состав программ друг с другом представлено на
   рис.~\ref{fig:programs}.
 
-  \begin{myfigure}{Программы, входящие в состав системы}{fig:programs}
+  \begin{myfigurehidden}{Программы, входящие в состав системы}{fig:programs}
     \begin{tikzpicture}[scale=1.0, transform shape]
       \tikzstyle{arrow} = [->, thick]
       \tikzstyle{item}  = [rectangle, text centered, font=\footnotesize, text width=2.5cm, minimum height=2em]
@@ -1802,7 +1807,7 @@
       \draw[arrow]  (main) -- (file);
       \draw[arrow,<->] (file) -| (stat);
     \end{tikzpicture}
-  \end{myfigure}
+  \end{myfigurehidden}
 
   Основная программа и программа обработки накопленных данных являются независимыми исполняемыми
   модулями. Взаимодействие между программами происходит через поддержку общего формата файлов, в
@@ -1845,7 +1850,7 @@
   Таким образом, архитектура основной программы приобретает вид, показанный на рис.~\ref{fig:main-arch}.
   Стрелками показано направление движения данных, пунктиром~--- реализация абстрактного класса.
 
-  \begin{myfigure}{Архитектура основной программы}{fig:main-arch}
+  \begin{myfigurehidden}{Архитектура основной программы}{fig:main-arch}
     \begin{tikzpicture}[scale=1.0, transform shape]
       \tikzstyle{arrow}  = [->, thick]
       \tikzstyle{impl}   = [->, thick, dashed]
@@ -1882,7 +1887,7 @@
       \node[label] [above=2cm of Core ] {Контроллер};
       \node[label] [above=2cm of GUI  ] {Представление};
     \end{tikzpicture}
-  \end{myfigure}
+  \end{myfigurehidden}
 
   С точки зрения объектно-ориентированного проектирования, каждый из блоков на рис.~\ref{fig:main-arch}
   реализуется в~виде класса, причём классы, реализующие различные протоколы (например, RS-232,
@@ -1902,7 +1907,7 @@
   так как её функциональность не настолько велика, чтобы класс-контроллер оказался перегружен.
   На рис.~\ref{fig:stat-arch} представлена архитектура программы обработки накопленных данных.
 
-  \begin{myfigure}{Архитектура программы обработки накопленных данных}{fig:stat-arch}
+  \begin{myfigurehidden}{Архитектура программы обработки накопленных данных}{fig:stat-arch}
     \begin{tikzpicture}[scale=0.9, transform shape]
       \tikzstyle{arrow}  = [->, thick]
       \tikzstyle{label}  = [draw=none, fill=none, font=\footnotesize\em]
@@ -1932,7 +1937,7 @@
       \node[label] [above=3mm of Core] {Контроллер};
       \node[label] [above=3mm of GUI ] {Представление};
     \end{tikzpicture}
-  \end{myfigure}
+  \end{myfigurehidden}
 
   Стрелками
   показано направление движения данных. Видно, что всеми потоками данных управляет контроллер, что и
@@ -2098,7 +2103,7 @@
   рис.~\ref{fig:main-classes} приведена диаграмма классов основной программы, на которой показано, к
   какому уровню относится каждый класс, в соответствии со схемой архитектуры (рис.~\ref{fig:main-arch}).
 
-  \begin{myfigure}{Диаграмма классов основной программы}{fig:main-classes}
+  \begin{myfigurehidden}{Диаграмма классов основной программы}{fig:main-classes}
     \begin{tikzpicture}[scale=0.8, transform shape]
       \begin{umlpackage}[fill=color1bg]{Model}
         \umlemptyclass[type=interface]{Protocol}
@@ -2127,7 +2132,7 @@
       \umldep{LogWindow}{Logger}
       \umldep[geometry=-|-, arm1=-7mm, anchor1=200]{Worker}{Settings}
     \end{tikzpicture}
-  \end{myfigure}
+  \end{myfigurehidden}
 
   На диаграмме представлены основные отношения между классами. При этом обмен данными между
   различными уровнями может быть целиком реализован с помощью механизма сигналов и слотов,
